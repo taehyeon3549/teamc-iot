@@ -96,6 +96,15 @@ $container['App\Controller\BackendController'] = function ($container) {
 
     return new App\Controller\BackendController($logger, $backendModel, $view);
 };
+
+//UserManagement controller
+$container['App\Controller\UserManagementController'] = function ($container) {
+	$logger = $container->get('logger');
+	$userManagementModel = $container->get('userManagementModel');
+	$view = $container->get('view');
+
+    return new App\Controller\UserManagementController($logger, $userManagementModel, $view);
+};
 //-----------------------------------------------------------------------------
 // Model factories
 // -----------------------------------------------------------------------------
@@ -104,4 +113,11 @@ $container['backendModel'] = function ($container) {
     $backendModel = new App\Model\BackendModel($container->get('db'));
 	
     return $backendModel;
+};
+
+$container['userManagementModel'] = function ($container) {
+    $settings = $container->get('settings');
+    $userManagementModel = new App\Model\UserManagementModel($container->get('db'));
+	
+    return $userManagementModel;
 };
