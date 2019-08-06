@@ -1,0 +1,18 @@
+cd <?php
+// Routes
+
+$app->get('/', 'App\Controller\HomeController:dispatch')
+    ->setName('homepage');
+
+$app->get('/post/{id}', 'App\Controller\HomeController:viewPost')
+    ->setName('view_post');
+
+$app->get('/ucsd/helloworld', 'App\Controller\UCSDController:helloworld')
+    ->setName('ucsd');
+
+$app->get('/ucsd/signup', 'App\Controller\UserController:signup')
+    ->setName('usersignup');
+
+$app->get('/ucsd/signin', 'App\Controller\UserController:signin')
+    ->setName('usersignin');
+

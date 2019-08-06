@@ -1,0 +1,22 @@
+<?php
+// Routes
+
+$app->get('/', 'App\Controller\HomeController:dispatch')
+    ->setName('homepage');
+
+$app->get('/post/{id}', 'App\Controller\HomeController:viewPost')
+    ->setName('view_post');
+
+// sign_up
+$app->get('/ucsd/sign_up', 'App\Controller\UserController:sign_up')
+    ->setName('sign_up');
+
+// sign_in
+$app->get('/ucsd/sign_in', 'App\Controller\UserController:sign_in')
+    ->setName('sign_in');
+
+//test
+$app->get('/test', 'App\Controller\TestController:dispatch')->setName('Test');
+
+//Run app
+$app->run();
