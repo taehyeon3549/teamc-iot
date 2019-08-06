@@ -212,7 +212,7 @@ final class BackendModel extends BaseModel
 		}
 	}
 	*/
-	
+
 	//Add the certification data
 	public function addCertifi($certi) {  
 		$sql = "INSERT INTO Certification (`certi_email`, `certi_code`, `certi_state`) VALUES (?, ?, ?)";
@@ -226,6 +226,21 @@ final class BackendModel extends BaseModel
 			return 1;
 		}
 	}
+
+	//Update user's certification state 1 to 0
+	public function changeCertifi($certi) {   
+		$sql = "UPDATE Certification SET certi_state = '0' WHERE certi_code = ?";
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($certi['code']))){
+			//success
+			return TRUE;
+		}else{
+			//fail
+			return FALSE;
+		}
+	}
+
 
 
 }

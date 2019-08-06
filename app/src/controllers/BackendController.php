@@ -408,14 +408,14 @@ final class BackendController extends BaseController
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
 	}
 
-//Change the certi_state in Certification table
+//Change the certi_state in Certification table(In email Link)
 	public function change_certification(Request $request, Response $response, $args)
 	{
 		//Store input email
 		$certi_code = $request->getParsedBody()['code'];
 
 		//Change the state
-		if($this->BackendModel->changeCertifi($certi_code) == 0){
+		if($this->BackendModel->changeCertifi($certi_code)){
 			$result['header'] = "Change the state success";
 			$result['message'] = "0";
 		}else{
