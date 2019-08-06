@@ -458,6 +458,8 @@ final class BackendController extends BaseController
 	}
 
 //user cancellation
+//0 : success, 1: Password is not correct, 2: Sensor is not exsit, 3: Delete polar data fail, 4: Delete air data fail
+//5: Delete sensor data fail, 6: Delete User data fail
 	public function delete_account(Request $request, Response $response, $args)
 	{
 		$user = [];
@@ -467,28 +469,53 @@ final class BackendController extends BaseController
 		$user['password'] = $request->getParsedBody()['password'];
 
 		//Get the user info in DB
-		$user_info = $this->BackendModel->getUserInfo_email($user);
-		
+		$user_info = $this->BackendModel->getUserInfo_usn($user['usn']);
+
 		//Check the password
 		if(password_verify($user['password'], $user_info['hashed'])){
 			//compare, then get the ssn in sensor table
 			$userDB = $this->BackendModel->getSensorByusn($user['usn']);
 			
+			//Check sensor are exsit 
 			if(count($userDB) > 0){
 				//sensor is exist, Store the ssn
 				$user['ssn'] = $userDB['SSN'];
 				//Delete data in air_value and polar_value
-				if($this->BackendModel->getSensorByusn($user['ssn']) == 0){
-					//delete ALL sensor data success
-					//delete user data
-
-					$result['header'] = "Delete ";
-					$result['message'] = "1";
+				//delete ALL sensor data success
+				//delete user data
+				if($this->BackendModel->deleteAir($user['usn'])){
+					if($this->BackendModel->deletePolar($user['usn'])){
+						//if delete ALL data success,delete the sensor
+						if($this->BackendModel->deleteSensor($user['usn'])){
+							//if delete the sensor, delete the user
+							if($this->BackendModel->deleteUser($user['usn'])){
+								//delete the user success
+								$result['header'] = "Delete User data success";
+								$result['message'] = "0";
+							}else{
+								//delete the user fail
+								$result['header'] = "Delete User data fail";
+								$result['message'] = "6";
+							}							
+						}else{
+							//delete sensor data fail
+							$result['header'] = "Delete sensor data fail";
+							$result['message'] = "5";
+						}						
+					}else{
+						//delete polar data fail
+						$result['header'] = "Delete polar data fail";
+						$result['message'] = "3";
+					}
+				}else{
+					//delete air data fail
+					$result['header'] = "Delete air data fail";
+					$result['message'] = "4";				
 				}
 			}else{
 				//password not correct
 				$result['header'] = "Sensor is not exsit";
-				$result['message'] = "1";	
+				$result['message'] = "2";	
 			}
 
 		}else{
