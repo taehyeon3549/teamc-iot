@@ -319,7 +319,6 @@ final class BackendController extends BaseController
 //0: send email success, 1: already have account, 2: send email fail, 3: insert certification table fail, 4: update certification table fail--------------------------------------
 	public function click_verify(Request $request, Response $response, $args)
 	{
-		echo("test");
 		//Store input email
 		$email_address = $request->getParsedBody()['id'];
 		//$email_address = 'xogusrla09@gmail.com';

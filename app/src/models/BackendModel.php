@@ -165,5 +165,19 @@ final class BackendModel extends BaseModel
 		}
 	}
 
+	//Update user's password
+	public function changePassByusn($certi) {  
+		$sql = "UPDATE User SET hashed = ? WHERE usn = ?";
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($certi['password'], $certi['usn']))){
+			//success
+			return TRUE;
+		}else{
+			//fail
+			return FALSE;
+		}
+	}
+
 
 }
