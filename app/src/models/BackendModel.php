@@ -139,7 +139,7 @@ final class BackendModel extends BaseModel
 		}
 	}
 
-	//Get User's info in User table
+	//Get certification value using by certi_code
 	public function getCertifi($code) {  
 		$sql = "SELECT * FROM Certification WHERE certi_code = ?";
 		$sth = $this->db->prepare($sql);
@@ -176,6 +176,54 @@ final class BackendModel extends BaseModel
 		}else{
 			//fail
 			return FALSE;
+		}
+	}
+
+	//Get certification value using by email
+	public function alreadyCertifi($email) {  
+		$sql = "SELECT * FROM Certification WHERE certi_email = ?";
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute(array($email));
+		$result = $sth->fetchAll();
+		$num = count($result);
+
+		if($num > 0){
+			//already try certificated
+			return 0;
+		}else{
+			//Didn't try certificated
+			return 1;
+		}
+	}
+
+	/*
+	//Update the certification data
+	public function updateCertifi($certi) {  
+		$sql = "UPDATE Certification SET certi_code = ?, certi_state = ? WHERE certi_email = ?";
+		$sth = $this->db->prepare($sql);
+
+		if($sth->execute(array($certi['code'], $certi['state'], $certi['email']))){
+			//success
+			return 0;
+		}else{
+			//fail
+			return 1;
+		}
+	}
+	*/
+	
+	//Add the certification data
+	public function addCertifi($certi) {  
+		$sql = "INSERT INTO Certification (`certi_email`, `certi_code`, `certi_state`) VALUES (?, ?, ?)";
+		$sth = $this->db->prepare($sql);
+
+		if($sth->execute(array($certi['email'], $certi['code'], $certi['state']))){
+			//success
+			return 0;
+		}else{
+			//fail
+			return 1;
 		}
 	}
 
