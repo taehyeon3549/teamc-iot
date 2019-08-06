@@ -139,5 +139,31 @@ final class BackendModel extends BaseModel
 		}
 	}
 
+	//Get User's info in User table
+	public function getCertifi($code) {  
+		$sql = "SELECT * FROM Certification WHERE certi_code = ?";
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute(array($code));
+		$result = $sth->fetchAll();
+
+		return $result[0];
+	}
+
+	//Update user's password
+	public function changePassByemail($certi) {  
+		$sql = "UPDATE User SET hashed = ? WHERE email = ?";
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($certi['password'], $certi['email']))){
+
+			//success
+			return TRUE;
+		}else{
+			//fail
+			return FALSE;
+		}
+	}
+
 
 }
