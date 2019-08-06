@@ -105,6 +105,13 @@ final class BackendController extends BaseController
 			$hash = password_hash($info['pw'], PASSWORD_DEFAULT);
 			$info['pw'] = $hash;
 
+			//Check the empty usn
+			$emptyusn = $this->BackendModel->checkEmptyusn();
+			if(count($emptyusn) > 0){
+				//If there are have empty usn, then use it
+				$info['usn'] = $emptyusn['val'];
+			}
+
 			//Array of put the result
 			$result = [];
 

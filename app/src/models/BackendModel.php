@@ -22,12 +22,12 @@ final class BackendModel extends BaseModel
 		}
 	}
 
-	//Insert User
+	//Insert User 여기
     public function addUser($user) {        
-		$sql = "INSERT into User (hashed, email, name, gender, birth, emergency_call ,sign_state, is_admin) values (?, ?, ?, ? , ?, ?, ?, ? )";
+		$sql = "INSERT into User (USN, hashed, email, name, gender, birth, emergency_call ,sign_state, is_admin) values (?, ?, ?, ?, ? , ?, ?, ?, ? )";
 		$sth = $this->db->prepare($sql);
 
-		if($sth->execute(array($user['pw'], $user['email'], $user['name'], $user['gender'], $user['birth'], $user['emergency_call'], $user['sign_state'], $user['is_admin']))){
+		if($sth->execute(array($user['usn'], $user['pw'], $user['email'], $user['name'], $user['gender'], $user['birth'], $user['emergency_call'], $user['sign_state'], $user['is_admin']))){
 			$val = "0";
 			return $val;
 		}else{
@@ -134,6 +134,17 @@ final class BackendModel extends BaseModel
 			//user not exist
 			return FALSE;
 		}
+	}
+
+	//Check the empty usn in user table
+	public function checkEmptyusn() {   
+		$sql = "SELECT min(USN + 1) AS val FROM User WHERE (USN + 1) NOT IN (SELECT USN FROM User)";
+		$sth = $this->db->prepare($sql);
+		$sth->execute();
+		
+		$result = $sth->fetchAll();
+		
+		return $result[0];
 	}
 	
 	//Update certification code
