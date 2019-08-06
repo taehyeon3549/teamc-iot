@@ -57,7 +57,7 @@ $container['db'] = function ($c) {
     return $pdo;
 };
 
-/*
+
 // doctrine EntityManager
 $container['em'] = function ($c) {
     $settings = $c->get('settings');
@@ -70,7 +70,7 @@ $container['em'] = function ($c) {
     );
     return \Doctrine\ORM\EntityManager::create($settings['doctrine']['connection'], $config);
 };
-*/
+
 // monolog
 $container['logger'] = function ($c) {
     $settings = $c->get('settings');
@@ -101,7 +101,7 @@ $container['App\Controller\BackendController'] = function ($container) {
 // -----------------------------------------------------------------------------
 $container['backendModel'] = function ($container) {
     $settings = $container->get('settings');
-    $backendModel = new App\Model\backendModel($container->get('db'));
+    $backendModel = new App\Model\BackendModel($container->get('db'));
 	
     return $backendModel;
 };
