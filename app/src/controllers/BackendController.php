@@ -228,7 +228,7 @@ final class BackendController extends BaseController
 			$info['code'] = $this->make_nonce();
 
 			//update user's certi_code in certification table
-			if($this->BackendModel->updateCertifi($info) == 0){
+			if($this->BackendModel->updateCertifi($info)){
 				//success
 				//send password change eamil
 				if($this->send_mail($info['email'], $info['code'], 1)){

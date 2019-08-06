@@ -107,5 +107,37 @@ final class BackendModel extends BaseModel
 		}
 	}
 
+	//Check User is exsit
+	public function checkUserinfo($user) {  
+		$sql = "SELECT * FROM User WHERE email = ? AND birth = ?";
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute(array($user['email'], $user['birth']));
+		$result = $sth->fetchAll();
+		$num = count($result);
+
+		if($num > 0){
+			//user exist
+			return TRUE;
+		}else{
+			//user not exist
+			return FALSE;
+		}
+	}
+	
+	//Update certification code
+	public function updateCertifi($info) {  
+		$sql = "UPDATE Certification SET certi_code = ? WHERE certi_email = ?";
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($info['code'], $info['email']))){
+			//success
+			return TRUE;
+		}else{
+			//fail
+			return FALSE;
+		}
+	}
+
 
 }
