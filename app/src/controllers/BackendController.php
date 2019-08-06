@@ -85,7 +85,6 @@ final class BackendController extends BaseController
 //0: sign_in success(send email), 1: already have account, 2: user db adding fail
 	public function signup_proc(Request $request, Response $response, $args)
 	{
-		echo("test");
 		//Get the User's info in sign_up page
 		$info = [];
 		$info['email'] = $request->getParsedBody()['id'];
@@ -469,7 +468,7 @@ final class BackendController extends BaseController
 		$user['password'] = $request->getParsedBody()['password'];
 
 		//Get the user info in DB
-		$user_info = $this->BackendModel->getUserInfo_email($user));
+		$user_info = $this->BackendModel->getUserInfo_email($user);
 		
 		//Check the password
 		if(password_verify($user['password'], $user_info['hashed'])){

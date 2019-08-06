@@ -1,7 +1,4 @@
 <?php
-/* test */
-/*  testttttt*/
-
 namespace App\Controller;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -69,12 +66,7 @@ final class BackendController extends BaseController
 			return false;
 		}
 	}
-
-	//test
-	public function test(){
-		echo("test");
-	}
-
+	
 //Make nonce code - 8char
 	public function make_nonce(){
 		//Create nonce code
