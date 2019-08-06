@@ -1,7 +1,7 @@
 <?php
 namespace App\Model;
 
-final class BackendModel extends BaseModel
+final class UserManagementModel extends BaseModel
 {
 	//Check Duplicate of email
 	public function duplicateEmail($email){
