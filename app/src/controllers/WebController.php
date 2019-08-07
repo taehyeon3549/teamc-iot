@@ -21,7 +21,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("Home page action dispatched");
 
-        $this->flash->addMessage('info', 'Sample flash message');
+        //$this->flash->addMessage('info', 'Sample flash message');
 
         $this->view->render($response, 'login.html');
         return $response;
@@ -56,7 +56,7 @@ final class WebController extends BaseController
         //Get email using by certi_code
         $val = $this->WebModel->getEmail($code);
         $email = $val['certi_email'];
-        
+
         //$this->view->render($response, 'register.html', array('code' => $code));
         $this->view->render($response, 'register.twig', ['email' => $email]);
         //$this->view->render($response, 'register.php');
@@ -68,7 +68,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("main page action dispatched");
 
-        $this->flash->addMessage('info', 'main page load');
+        //$this->flash->addMessage('info', 'main page load');
 
         $this->view->render($response, 'index.html');
         return $response;
@@ -79,7 +79,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("register_email page action dispatched");
 
-        $this->flash->addMessage('info', 'register_email page load');
+        //$this->flash->addMessage('info', 'register_email page load');
 
         $this->view->render($response, 'register_email.html');
         return $response;
@@ -90,7 +90,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("forgotten_password page action dispatched");
 
-        $this->flash->addMessage('info', 'forgotten_password page load');
+        //$this->flash->addMessage('info', 'forgotten_password page load');
 
         $this->view->render($response, 'forgot-password.html');
         return $response;
@@ -101,7 +101,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("register_email_message page action dispatched");
 
-        $this->flash->addMessage('info', 'register_email_message page load');
+        //$this->flash->addMessage('info', 'register_email_message page load');
 
         $this->view->render($response, 'register_email_message.html');
         return $response;
@@ -112,7 +112,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("myaccount page action dispatched");
 
-        $this->flash->addMessage('info', 'myaccount page load');
+        //$this->flash->addMessage('info', 'myaccount page load');
 
         $this->view->render($response, 'myaccount.html');
         return $response;
@@ -123,7 +123,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("change-password page action dispatched");
 
-        $this->flash->addMessage('info', 'change-password page load');
+        //$this->flash->addMessage('info', 'change-password page load');
 
         $this->view->render($response, 'change-password.html');
         return $response;
@@ -134,7 +134,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("change_idcancellation page action dispatched");
 
-        $this->flash->addMessage('info', 'change_idcancellation page load');
+        //$this->flash->addMessage('info', 'change_idcancellation page load');
 
         $this->view->render($response, 'change-idcancellation.html');
         return $response;
@@ -145,7 +145,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("charts page action dispatched");
 
-        $this->flash->addMessage('info', 'charts page load');
+       // $this->flash->addMessage('info', 'charts page load');
 
         $this->view->render($response, 'charts.html');
         return $response;
@@ -156,7 +156,7 @@ final class WebController extends BaseController
     {
         $this->logger->info("maps page action dispatched");
 
-        $this->flash->addMessage('info', 'maps page load');
+        //$this->flash->addMessage('info', 'maps page load');
 
         $this->view->render($response, 'google_geolocation.html');
         return $response;
