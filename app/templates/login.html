@@ -16,7 +16,6 @@
 
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
-
 </head>
 
 <body class="bg-dark">
@@ -24,6 +23,7 @@
     <div class="card card-login mx-auto mt-5">
       <div class="card-header">Farm-ing</div>
       <div class="card-body">
+
         <form>
           <div class="form-group">
             <div class="form-label-group">
@@ -33,7 +33,7 @@
           </div>
           <div class="form-group">
             <div class="form-label-group">
-              <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="required">
+              <input type="password" name ="pass" id="inputPassword" class="form-control" placeholder="Password" required="required">
               <label for="inputPassword">Password</label>
             </div>
           </div>
@@ -45,10 +45,50 @@
               </label>
             </div>
           </div>
-          <a class="btn btn-primary btn-block" id="loginb"href="/main">Login</a>
+          <a class="btn btn-primary btn-block" id="loginb">Login</a>
         </form>
+
         <script type="text/javascript">
-          document.getElementById("loginb").addEventListener('click', function(){alert("sign up success");});
+          //When click the login btn
+          document.getElementById("loginb").addEventListener('click', function(){
+            // Check the value are all filled
+            var email = $('input[name = email]').val();
+            var pass = $('input[name = pass]').val();
+
+            if(($("#inputEmail").length == 0)){
+              alert("Please, Enter the email");
+            }else if(($("#inputPassword").length == 0)){
+              alert("Please, Enter the password");
+            }else{
+              //send json
+              $.ajax({
+              method: "POST",
+              url: "/signin_proc",
+              data: {
+                "id": $('input[name = email]').val(),                
+                "pw": $('input[name = pass]').val()                
+              }
+              }).done(function( msg ) {
+                  //If sign_up success, show up the sign in page
+                  if(msg.message == 0){
+                    alert("Welcome!!");
+                    location.href = "/main";
+                  }
+                  if(msg.message == 1){
+                    alert("Please, check your password again.");
+                    location.href = "/";
+                  }
+                  if(msg.message == 2){
+                    alert("You don't have account. Why don't you our member?");
+                    location.href = "/sign_up";
+                  }
+                  if(msg.message == 3){
+                    alert("You didn't certifate. Please, check your email.");
+                    location.href = "/";
+                  }
+              });         
+            }
+          });
         </script>
         <div class="text-center">
           <a class="d-block small mt-3" href="/register_email">Register an Account</a>
@@ -65,6 +105,11 @@
   <!-- Core plugin JavaScript-->
   <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 
+  <!-- POST value to make JSON -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript">
+  
+  </script>
 </body>
 
 </html>

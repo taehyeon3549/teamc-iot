@@ -33,6 +33,17 @@ final class WebController extends BaseController
         return $response;
     }
 
+    //sign up page
+	public function sign_up(Request $request, Response $response, $args)
+    {
+        $this->logger->info("sign_up page action dispatched");
+
+        $this->flash->addMessage('info', 'sign_up page load');
+
+        $this->view->render($response, 'register.html');
+        return $response;
+    }
+
     //Main page
 	public function main(Request $request, Response $response, $args)
     {
