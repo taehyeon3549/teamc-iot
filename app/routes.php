@@ -91,6 +91,10 @@ $app->post('/registrationSensor', 'App\Controller\SensorManagementController:reg
 $app->post('/deregistrationSensor', 'App\Controller\SensorManagementController:deregistrationSensor')
 ->setName('deregistrationSensor');
 
+//Sensor List
+$app->post('/sensorList', 'App\Controller\SensorManagementController:sensorList')
+->setName('sensorList');
+
 //insert_Sensor value
 $app->post('/insertSensor', 'App\Controller\SensorManagementController:insertSensor')
 ->setName('insertSensor');

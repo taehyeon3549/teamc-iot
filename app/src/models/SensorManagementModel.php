@@ -75,6 +75,15 @@ final class SensorManagementModel extends BaseModel
 		}		
 	}
 
+	//Get sensor list by usn
+	public function getSensorByusn($sensor){   
+		$sql = "SELECT * FROM Sensor WHERE s_user = ? ";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($sensor['usn']));		
+		$result = $sth->fetchAll();		
+		return $result[0];
+	}
+
 
 	//Check the empty ssn in sensor table
 	public function checkEmptyssn(){   

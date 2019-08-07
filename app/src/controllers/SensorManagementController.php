@@ -94,10 +94,30 @@ final class SensorManagementController extends BaseController
 			$result['header'] = "Delete Air sensor value fail";
 			$result['message'] = "1";
 		}
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
+
+	//Sensor List
+	public function sensorList(Request $request, Response $response, $args)
+	{
+		$sensor = [];
+		$sensor['usn'] = $request->getParsedBody()['usn'];
+		$sensor_val = $this->SensorManagementModel->getSensorByusn($sensor);
+		
+		$result['header'] = "Sensor List ";
+		$result['message'] = [];
+		$result['message']['ssn'] = $sensor_val['SSN'];
+		$result['message']['mac'] = $sensor_val['s_MAC'];
+		$result['message']['name'] = $sensor_val['s_name'];
+		$result['message']['state'] = $sensor_val['s_state'];
 		
 		return $response->withStatus(200)
 		->withHeader('Content-Type', 'application/json')
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
+
 	}
 
 	//insert sensor data	
