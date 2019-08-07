@@ -491,7 +491,7 @@ final class UserManagementController extends BaseController
 	}
 
 //user cancellation
-//0 : success, 1: Sensor is not exsit, 2: Delete polar data fail, 3: Delete air data fail
+//0 : success, 2: Delete polar data fail, 3: Delete air data fail
 //4: Delete sensor data fail, 5: Delete User data fail
 	public function delete_account(Request $request, Response $response, $args)
 	{
@@ -513,16 +513,7 @@ final class UserManagementController extends BaseController
 				if($this->UserManagementModel->deletePolar($user['usn'])){
 					//if delete ALL data success,delete the sensor
 					if($this->UserManagementModel->deleteSensor($user['usn'])){
-						//if delete the sensor, delete the user
-						if($this->UserManagementModel->deleteUser($user['usn'])){
-							//delete the user success
-							$result['header'] = "Delete User data success";
-							$result['message'] = "0";
-						}else{
-							//delete the user fail
-							$result['header'] = "Delete User data fail";
-							$result['message'] = "5";
-						}							
+						//if delete the sensor, delete the user						
 					}else{
 						//delete sensor data fail
 						$result['header'] = "Delete sensor data fail";
@@ -538,11 +529,18 @@ final class UserManagementController extends BaseController
 				$result['header'] = "Delete air data fail";
 				$result['message'] = "3";				
 			}
+		}
+
+		//Delete user data in user table
+		if($this->UserManagementModel->deleteUser($user['usn'])){
+			//delete the user success
+			$result['header'] = "Delete User data success";
+			$result['message'] = "0";
 		}else{
-			//password not correct
-			$result['header'] = "Sensor is not exsit";
-			$result['message'] = "1";	
-		}		
+			//delete the user fail
+			$result['header'] = "Delete User data fail";
+			$result['message'] = "5";
+		}							
 
 		return $response->withStatus(200)
 		->withHeader('Content-Type', 'application/json')
