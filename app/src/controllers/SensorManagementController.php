@@ -65,9 +65,39 @@ final class SensorManagementController extends BaseController
 	}
 
 	//Deregistratioin sensor info	
+	//0: Delete sensor success, 1: Delete Air sensor value fail, 2: Delete Polar sensor value fail
 	public function deregistrationSensor(Request $request, Response $response, $args)
 	{
+		$sensor = [];
+		//Get usn, ssn
+		$sensor['usn'] = $request->getParsedBody()['usn'];
+		$sensor['ssn'] = $request->getParsedBody()['ssn'];
 
+		//delete air sensor value
+		if($this->SensorManagementModel->deleteAir($sensor)){
+			//delete air success
+			if($this->SensorManagementModel->deletePolar($sensor)){
+				//delete polar success
+				//deregit sensor
+				if($this->SensorManagementModel->deregitSensor($sensor)){
+					//delete ALL data
+					$result['header'] = "Delete sensor success";
+					$result['message'] = "0";
+				}
+			}else{
+				//delete polar fail
+				$result['header'] = "Delete Polar sensor value fail";
+				$result['message'] = "2";
+			}
+		}else{
+			//delete air fail
+			$result['header'] = "Delete Air sensor value fail";
+			$result['message'] = "1";
+		}
+		
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
 	}
 
 	//insert sensor data	

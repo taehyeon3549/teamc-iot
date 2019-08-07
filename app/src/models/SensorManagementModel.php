@@ -35,6 +35,47 @@ final class SensorManagementModel extends BaseModel
 		}		
 	}
 
+	//Delete air sensor value
+	public function deleteAir($sensor){
+		$sql = "DELETE FROM Air_Sensor_value WHERE a_ssn = ? AND a_usn = ?";
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($sensor['ssn'], $sensor['usn']))){
+			//insert success
+			return TRUE;
+		}else{
+			return FALSE;
+		}		
+	}
+
+	//Delete Polar sensor value
+	public function deletePolar($sensor){
+		$sql = "DELETE FROM Polar_Sensor_value WHERE p_ssn = ? AND p_usn = ?";
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($sensor['ssn'], $sensor['usn']))){
+			//insert success
+			return TRUE;
+		}else{
+			return FALSE;
+		}		
+	}
+
+	//Deregistratioin sensor info
+	public function deregitSensor($sensor){
+		$sql = "DELETE FROM Sensor WHERE SSN = ? AND s_user = ?";
+		
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($sensor['ssn'], $sensor['usn']))){
+			//insert success
+			return TRUE;
+		}else{
+			return FALSE;
+		}		
+	}
+
+
 	//Check the empty ssn in sensor table
 	public function checkEmptyssn(){   
 		$sql = "SELECT min(SSN + 1) AS val FROM Sensor WHERE (SSN + 1) NOT IN (SELECT SSN FROM Sensor)";

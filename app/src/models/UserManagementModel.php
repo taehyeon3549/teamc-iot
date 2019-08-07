@@ -129,10 +129,10 @@ final class UserManagementModel extends BaseModel
 
 		if($num > 0){
 			//user exist
-			return TRUE;
+			return true;
 		}else{
 			//user not exist
-			return FALSE;
+			return false;
 		}
 	}
 
