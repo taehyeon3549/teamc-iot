@@ -79,66 +79,22 @@ $app->post('/change_password', 'App\Controller\UserManagementController:change_p
 $app->post('/delete_account', 'App\Controller\UserManagementController:delete_account')
 ->setName('delete_account');
 
-//insert_data
-$app->post('/insertSensor', 'App\Controller\UserManagementController:insertSensor')
+/****************************************/
+/*         Sensor Management            */
+/****************************************/
+
+//register_Sensor 
+$app->post('/registrationSensor', 'App\Controller\SensorManagementController:registrationSensor')
+->setName('registrationSensor');
+
+//Deregister_Sensor 
+$app->post('/deregistrationSensor', 'App\Controller\SensorManagementController:deregistrationSensor')
+->setName('deregistrationSensor');
+
+//insert_Sensor value
+$app->post('/insertSensor', 'App\Controller\SensorManagementController:insertSensor')
 ->setName('insertSensor');
 
-/****************************************/
-/*              Back-end                */
-/****************************************/
-/*
-//sign_up
-$app->post('/signup_proc', 'App\Controller\BackendController:signup_proc')
-    ->setName('signup_proc');
-
-//eamil check
-$app->post('/check_user', 'App\Controller\BackendController:check_user')
-    ->setName('check_user');
-
-//click_verify
-$app->post('/click_verify', 'App\Controller\BackendController:click_verify')
-    ->setName('click_verify');
-
-//certification check
-$app->post('/check_certification', 'App\Controller\BackendController:check_certification')
-    ->setName('check_certification');
-
-//change the certi_state
-$app->post('/change_certification', 'App\Controller\BackendController:change_certification')
-    ->setName('change_certification');
-
-//sign_in
-$app->post('/signin_proc', 'App\Controller\BackendController:signin_proc')
-    ->setName('signin_proc');
-
-//sign_out
-$app->post('/signout_proc', 'App\Controller\BackendController:signout_proc')
-    ->setName('signout_proc');
-
-//forgot_password check- user are exsit
-$app->post('/forgot_password_check', 'App\Controller\BackendController:forgot_password_check')
-    ->setName('forgot_password_check');
-
-//forgot_password
-$app->post('/forgot_password', 'App\Controller\BackendController:forgot_password')
-    ->setName('forgot_password');
-
-//change_password
-$app->post('/change_password', 'App\Controller\BackendController:change_password')
-    ->setName('change_password');
-
-//user cancellation
-$app->post('/delete_account', 'App\Controller\BackendController:delete_account')
-    ->setName('delete_account');
-
-//insert_data
-$app->post('/insertSensor', 'App\Controller\BackendController:insertSensor')
-    ->setName('insertSensor');
-
-//Get_data - not make
-$app->post('/getSensor', 'App\Controller\BackendController:getSensor')
-    ->setName('getSensor'); 
-*/
 
 /****************************************/
 /*          certification page          */

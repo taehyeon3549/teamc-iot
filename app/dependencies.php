@@ -105,6 +105,15 @@ $container['App\Controller\UserManagementController'] = function ($container) {
 
     return new App\Controller\UserManagementController($logger, $userManagementModel, $view);
 };
+
+//SensorManagement controller
+$container['App\Controller\SensorManagementController'] = function ($container) {
+	$logger = $container->get('logger');
+	$sensorManagementModel = $container->get('sensorManagementModel');
+	$view = $container->get('view');
+
+    return new App\Controller\SensorManagementController($logger, $sensorManagementModel, $view);
+};
 //-----------------------------------------------------------------------------
 // Model factories
 // -----------------------------------------------------------------------------
@@ -120,4 +129,11 @@ $container['userManagementModel'] = function ($container) {
     $userManagementModel = new App\Model\UserManagementModel($container->get('db'));
 	
     return $userManagementModel;
+};
+
+$container['sensorManagementModel'] = function ($container) {
+    $settings = $container->get('settings');
+    $sensorManagementModel = new App\Model\SensorManagementModel($container->get('db'));
+	
+    return $sensorManagementModel;
 };

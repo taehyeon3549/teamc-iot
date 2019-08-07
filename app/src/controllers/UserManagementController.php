@@ -9,13 +9,13 @@ use PHPMailer\PHPMailer\Exception;
 final class UserManagementController extends BaseController
 {
 	protected $logger;
-	protected $BackendModel;
+	protected $UserManagementModel;
 	protected $view;
 
-	public function __construct($logger, $BackendModel, $view)
+	public function __construct($logger, $UserManagementModel, $view)
 	{
 		$this->logger = $logger;
-		$this->BackendModel = $BackendModel;
+		$this->UserManagementModel = $UserManagementModel;
 		$this->view = $view;
 	}
 
@@ -25,7 +25,7 @@ final class UserManagementController extends BaseController
 		$mail = new PHPMailer(true);		
 		try{
 			//Server settings
-			$mail->SMTPDebug = 2;
+			$mail->SMTPDebug = 0;		//debugging setting 
 			$mail->isSMTP();
 			$mail->Host = 'smtp.gmail.com';   
 			$mail->SMTPAuth = true;
@@ -62,7 +62,7 @@ final class UserManagementController extends BaseController
 
 			return true;	
 		} catch (Exception $e){
-			print_r($e);
+			//print_r($e);
 			return false;
 		}
 	}
@@ -95,7 +95,7 @@ final class UserManagementController extends BaseController
 		$info['emergency_call'] = $request->getParsedBody()['emergency'];
 
 		//Check the duplicate of email
-		if($this->BackendModel->duplicateEmail($info['email']) == 0){
+		if($this->UserManagementModel->duplicateEmail($info['email']) == 0){
 			//if there are not have a user, start to create account
 			//Set the user's init setting
 			$info['sign_state'] = 1;
@@ -106,7 +106,7 @@ final class UserManagementController extends BaseController
 			$info['pw'] = $hash;
 
 			//Check the empty usn
-			$emptyusn = $this->BackendModel->checkEmptyusn();
+			$emptyusn = $this->UserManagementModel->checkEmptyusn();
 			if(count($emptyusn) > 0){
 				//If there are have empty usn, then use it
 				$info['usn'] = $emptyusn['val'];
@@ -116,7 +116,7 @@ final class UserManagementController extends BaseController
 			$result = [];
 
 			//Insert the user's info in DB and Check, is success
-			if($this->BackendModel->addUser($info) == 0){		
+			if($this->UserManagementModel->addUser($info) == 0){		
 				$result['header'] = "Add user success";
 				$result['message'] = "0";
 			}else{
@@ -145,7 +145,7 @@ final class UserManagementController extends BaseController
 
 		//Array of put the result
 		$result = [];
-		$temp = $this->BackendModel->login($info['email']);
+		$temp = $this->UserManagementModel->login($info['email']);
 
 		//Insert the user's info in DB and Check, is success
 		if(!$temp['hashed']){
@@ -157,7 +157,7 @@ final class UserManagementController extends BaseController
 				//Login success!!
 				//Check this user are certificated
 				//result of certificate
-				$certificated = $this->BackendModel->checkCertifi($info['email']);
+				$certificated = $this->UserManagementModel->checkCertifi($info['email']);
 				
 				if($certificated['certi_state'] == 1){
 					//if user are not certificated can not sign_in
@@ -165,13 +165,13 @@ final class UserManagementController extends BaseController
 					$result['message'] = "3";
 				}else{
 					//Get authority and usn by email
-					$userInfo = $this->BackendModel->getUserInfo_email($info['email']);
+					$userInfo = $this->UserManagementModel->getUserInfo_email($info['email']);
 
 					$usn = $userInfo['USN'];
 					$is_admin = $userInfo['is_admin'];
 
 					//then make login state to 1
-					if($this->BackendModel->changeSignin($info['email'])){
+					if($this->UserManagementModel->changeSignin($info['email'])){
 						$result['header'] = "login_success";
 						$result['message'] = "0";
 						$result['usn'] = $usn;
@@ -201,7 +201,7 @@ final class UserManagementController extends BaseController
 		//Array of put the result
 		$result = [];
 
-		if($this->BackendModel->changeSignout($info['usn'])){
+		if($this->UserManagementModel->changeSignout($info['usn'])){
 			$result['header'] = "Signout_success";
 			$result['message'] = "0";	
 		}else{
@@ -228,14 +228,14 @@ final class UserManagementController extends BaseController
 		$result = [];
 
 		//check the user info is correct
-		if($this->BackendModel->checkUserinfo($info)){
+		if($this->UserManagementModel->checkUserinfo($info)){
 			//user exist, send the link by email
 
 			//Create a nonce code in certification tabel in DB
 			$info['code'] = $this->make_nonce();
 
 			//update user's certi_code in certification table
-			if($this->BackendModel->updateCertifi($info)){
+			if($this->UserManagementModel->updateCertifi($info, 0)){
 				//success
 				//send password change eamil
 				if($this->send_mail($info['email'], $info['code'], 1)){
@@ -270,7 +270,7 @@ final class UserManagementController extends BaseController
 
 		//Get email using by certi_code
 		$certi['code'] = $request->getParsedBody()['code'];
-		$certi['email'] = $this->BackendModel->getCertifi($certi['code'])['certi_email'];		//user's email
+		$certi['email'] = $this->UserManagementModel->getCertifi($certi['code'])['certi_email'];		//user's email
 
 		//Change the password
 		//Get the password of input
@@ -278,7 +278,7 @@ final class UserManagementController extends BaseController
 		//Hashing the password
 		$certi['password'] = password_hash($password, PASSWORD_DEFAULT);
 
-		if($this->BackendModel->changePassByemail($certi)){
+		if($this->UserManagementModel->changePassByemail($certi)){
 			//change success
 			$result['header'] = "Password change success";
 			$result['message'] = "0";
@@ -307,7 +307,7 @@ final class UserManagementController extends BaseController
 		//Hashing the password
 		$certi['password'] = password_hash($password, PASSWORD_DEFAULT);
 
-		if($this->BackendModel->changePassByusn($certi)){
+		if($this->UserManagementModel->changePassByusn($certi)){
 			//change success
 			$result['header'] = "Password change success";
 			$result['message'] = "0";
@@ -331,14 +331,12 @@ final class UserManagementController extends BaseController
 		//$email_address = 'xogusrla09@gmail.com';
 
 		//Check the duplicate of email
-		if($this->BackendModel->duplicateEmail($email_address) == 0){
+		if($this->UserManagementModel->duplicateEmail($email_address) == 0){
 			//if there are not have a user, start to create account
 			$result = [];
 
 			//Create nonce code
 			$randomString = $this->make_nonce();
-		    
-		    echo($randomString);
 
 		    //Data of certification
 			$certi = [];		//certification data
@@ -347,9 +345,9 @@ final class UserManagementController extends BaseController
 			$certi['state'] = 1;		//default is 1
 
 			//check the email, already certificated.
-			if($this->BackendModel->alreadyCertifi($certi['email']) == 0){
+			if($this->UserManagementModel->alreadyCertifi($certi['email']) == 0){
 				//already try certificate - update certification table
-				if($this->BackendModel->updateCertifi($certi) == 0){
+				if($this->UserManagementModel->updateCertifi($certi, 1)){
 					//update certification table success
 					//Send certification email
 					if($this->send_mail($certi['email'], $certi['code'], 0)){
@@ -367,7 +365,7 @@ final class UserManagementController extends BaseController
 			}else{
 				//Never been try certificate
 				//Insert the user data in certification table in DB			
-				if($this->BackendModel->addCertifi($certi) == 0){
+				if($this->UserManagementModel->addCertifi($certi) == 0){
 					//Send certification email
 					if($this->send_mail($certi['email'], $certi['code'], 0)){
 						$result['header'] = "Send email success";
@@ -397,7 +395,7 @@ final class UserManagementController extends BaseController
 	{
 		//Store input email
 		$email_address = $request->getParsedBody()['id'];
-		$certi_state = $this->BackendModel->checkCertifi($email_address);
+		$certi_state = $this->UserManagementModel->checkCertifi($email_address);
 
 		//check the certi_state
 		if($certi_state['certi_state'] == '0'){
@@ -419,10 +417,11 @@ final class UserManagementController extends BaseController
 	public function change_certification(Request $request, Response $response, $args)
 	{
 		//Store input email
+		//if(!isset($data[]))
 		$certi_code = $request->getParsedBody()['code'];
 
 		//Change the state
-		if($this->BackendModel->changeCertifi($certi_code)){
+		if($this->UserManagementModel->changeCertifi($certi_code)){
 			$result['header'] = "Change the state success";
 			$result['message'] = "0";
 		}else{
@@ -446,10 +445,10 @@ final class UserManagementController extends BaseController
 		$result = [];
 
 		//Run the SQL
-		//$this->BackendModel->getByEmail($info['email']);
+		//$this->UserManagementModel->getByEmail($info['email']);
 
 		//Insert the user's info in DB and Check, is success
-		if($this->BackendModel->getByEmail($info['email']) > 0){
+		if($this->UserManagementModel->getByEmail($info['email']) > 0){
 			//Already exist the email, make response 1
 			$result['header'] = "Already have account";
 			$result['message'] = "1";
@@ -476,12 +475,12 @@ final class UserManagementController extends BaseController
 		$user['password'] = $request->getParsedBody()['password'];
 
 		//Get the user info in DB
-		$user_info = $this->BackendModel->getUserInfo_usn($user['usn']);
+		$user_info = $this->UserManagementModel->getUserInfo_usn($user['usn']);
 
 		//Check the password
 		if(password_verify($user['password'], $user_info['hashed'])){
 			//compare, then get the ssn in sensor table
-			$userDB = $this->BackendModel->getSensorByusn($user['usn']);
+			$userDB = $this->UserManagementModel->getSensorByusn($user['usn']);
 			
 			//Check sensor are exsit 
 			if(count($userDB) > 0){
@@ -490,12 +489,12 @@ final class UserManagementController extends BaseController
 				//Delete data in air_value and polar_value
 				//delete ALL sensor data success
 				//delete user data
-				if($this->BackendModel->deleteAir($user['usn'])){
-					if($this->BackendModel->deletePolar($user['usn'])){
+				if($this->UserManagementModel->deleteAir($user['usn'])){
+					if($this->UserManagementModel->deletePolar($user['usn'])){
 						//if delete ALL data success,delete the sensor
-						if($this->BackendModel->deleteSensor($user['usn'])){
+						if($this->UserManagementModel->deleteSensor($user['usn'])){
 							//if delete the sensor, delete the user
-							if($this->BackendModel->deleteUser($user['usn'])){
+							if($this->UserManagementModel->deleteUser($user['usn'])){
 								//delete the user success
 								$result['header'] = "Delete User data success";
 								$result['message'] = "0";
@@ -555,7 +554,7 @@ final class UserManagementController extends BaseController
 		$sensor['time'] = $request->getParsedBody()['time'];
 
 
-		if($this->BackendModel->insertSensorData($sensor) > 0){
+		if($this->UserManagementModel->insertSensorData($sensor) > 0){
 			//Already exist the email, make response 1
 			$result['header'] = "Miss";
 			$result['message'] = "1";

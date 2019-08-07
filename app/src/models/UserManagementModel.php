@@ -148,11 +148,13 @@ final class UserManagementModel extends BaseModel
 	}
 	
 	//Update certification code
-	public function updateCertifi($info) {  
-		$sql = "UPDATE Certification SET certi_code = ? WHERE certi_email = ?";
+	public function updateCertifi($info, $num) {  
+		$sql = "UPDATE Certification SET certi_code = ? , certi_state = ? WHERE certi_email = ?";
 		$sth = $this->db->prepare($sql);
 		
-		if($sth->execute(array($info['code'], $info['email']))){
+		echo($num);
+		
+		if($sth->execute(array($info['code'], $num, $info['email']))){
 			//success
 			return TRUE;
 		}else{
@@ -251,10 +253,10 @@ final class UserManagementModel extends BaseModel
 
 	//Update user's certification state 1 to 0
 	public function changeCertifi($certi) {   
-		$sql = "UPDATE Certification SET certi_state = '0' WHERE certi_code = ?";
+		$sql = "UPDATE `Certification` SET `certi_state` = '0' WHERE (`certi_code` = ?)";
 		$sth = $this->db->prepare($sql);
 		
-		if($sth->execute(array($certi['code']))){
+		if($sth->execute(array($certi))){
 			//success
 			return TRUE;
 		}else{
