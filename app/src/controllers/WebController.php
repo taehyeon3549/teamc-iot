@@ -12,7 +12,7 @@ final class WebController extends BaseController
 
         $this->flash->addMessage('info', 'Sample flash message');
 
-        $this->view->render($response, 'index.html');
+        $this->view->render($response, 'login.html');
         return $response;
     }
 
@@ -33,71 +33,102 @@ final class WebController extends BaseController
         return $response;
     }
 
-//sign_in
-	public function sign_in(Request $request, Response $response, $args)
+    //Main page
+	public function main(Request $request, Response $response, $args)
     {
-        $this->logger->info("Sign_in page action dispatched");
+        $this->logger->info("main page action dispatched");
 
-        $this->flash->addMessage('info', 'sign_in page load');
+        $this->flash->addMessage('info', 'main page load');
 
-        $this->view->render($response, 'sign_in.html');
+        $this->view->render($response, 'index.html');
         return $response;
     }
 
-//sign_up
-	public function sign_up(Request $request, Response $response, $args)
+    //register_email(Before the sign_up page)
+	public function register_email(Request $request, Response $response, $args)
     {
-        $this->logger->info("Sign_up page action dispatched");
+        $this->logger->info("register_email page action dispatched");
 
-        $this->flash->addMessage('info', 'sign_up page load');
+        $this->flash->addMessage('info', 'register_email page load');
 
-        $this->view->render($response, 'sign_up.html');
+        $this->view->render($response, 'register_email.html');
         return $response;
     }
 
-//forgotten_password
+    //forgotten_password
 	public function forgotten_password(Request $request, Response $response, $args)
     {
         $this->logger->info("forgotten_password page action dispatched");
 
         $this->flash->addMessage('info', 'forgotten_password page load');
 
-        $this->view->render($response, 'ForgottPw.html');
+        $this->view->render($response, 'forgot-password.html');
         return $response;
     }
 
-//show_Map
-	public function map(Request $request, Response $response, $args)
+    //register_email_message
+	public function register_email_message(Request $request, Response $response, $args)
     {
-        $this->logger->info("map page action dispatched");
+        $this->logger->info("register_email_message page action dispatched");
 
-        $this->flash->addMessage('info', 'map page load');
+        $this->flash->addMessage('info', 'register_email_message page load');
 
-        $this->view->render($response, 'Map.html');
+        $this->view->render($response, 'register_email_message.html');
         return $response;
     }
 
-//mypage
-	public function mypage(Request $request, Response $response, $args)
+    //myaccount
+	public function myaccount(Request $request, Response $response, $args)
     {
-        $this->logger->info("my page action dispatched");
+        $this->logger->info("myaccount page action dispatched");
 
-        $this->flash->addMessage('info', 'my page load');
+        $this->flash->addMessage('info', 'myaccount page load');
 
-        $this->view->render($response, 'My_page.html');
+        $this->view->render($response, 'myaccount.html');
         return $response;
     }
 
-    //test
-    public function test(Request $request, Response $response, $args){
-        echo ("test");
+    //change-password
+	public function change_password(Request $request, Response $response, $args)
+    {
+        $this->logger->info("change-password page action dispatched");
 
-        
-        $result = [];
-        $result['message'] = "test";
+        $this->flash->addMessage('info', 'change-password page load');
 
-        return $response->withStatus(200)
-        ->withHeader('Content-Type', 'application/json')
-        ->write(json_encode($result, JSON_NUMERIC_CHECK));
+        $this->view->render($response, 'change-password.html');
+        return $response;
     }
+
+    //change_idcancellation
+	public function change_idcancellation(Request $request, Response $response, $args)
+    {
+        $this->logger->info("change_idcancellation page action dispatched");
+
+        $this->flash->addMessage('info', 'change_idcancellation page load');
+
+        $this->view->render($response, 'change-idcancellation.html');
+        return $response;
+    }
+
+    //charts
+	public function charts(Request $request, Response $response, $args)
+    {
+        $this->logger->info("charts page action dispatched");
+
+        $this->flash->addMessage('info', 'charts page load');
+
+        $this->view->render($response, 'charts.html');
+        return $response;
+    }
+
+    //maps
+	public function maps(Request $request, Response $response, $args)
+    {
+        $this->logger->info("maps page action dispatched");
+
+        $this->flash->addMessage('info', 'maps page load');
+
+        $this->view->render($response, 'google_geolocation.html');
+        return $response;
+    }   
 }

@@ -6,30 +6,49 @@
 /*              web page                */
 /****************************************/
 
-// home page
+// Login page
 $app->get('/', 'App\Controller\WebController:dispatch')
-    ->setName('homepage');
-
-//sign_in page
-$app->get('/sign_in', 'App\Controller\WebController:sign_in')
     ->setName('sign_in');
 
-//sign_up page
-$app->get('/sign_up', 'App\Controller\WebController:sign_up')
-    ->setName('sign_up');
+// main page
+$app->get('/main', 'App\Controller\WebController:main')
+    ->setName('main');
+
+// register_email
+$app->get('/register_email', 'App\Controller\WebController:register_email')
+    ->setName('register_email');
 
 //forgotten_password page
-$app->get('/forgotten_password', 'App\Controller\WebController:forgotten_password')
-    ->setName('ForgottPw');
+$app->get('/forgot-password', 'App\Controller\WebController:forgotten_password')
+    ->setName('forgot-password');
 
-//Map page
-$app->get('/map', 'App\Controller\WebController:map')
-    ->setName('Map');
+// Sign_up
+$app->get('/sign_up', 'App\Controller\WebController:sign_up')
+    ->setName('sign_up');  
 
-//My page
-$app->get('/mypage', 'App\Controller\WebController:mypage')
-    ->setName('Mypage');
+// register_email_message
+$app->get('/register_email_message', 'App\Controller\WebController:register_email_message')
+    ->setName('register_email_message'); 
 
+// myaccount
+$app->get('/myaccount', 'App\Controller\WebController:myaccount')
+    ->setName('myaccount');
+
+// change_password
+$app->get('/change_password', 'App\Controller\WebController:change_password')
+    ->setName('change_password');
+
+// change_idcancellation
+$app->get('/change_idcancellation', 'App\Controller\WebController:change_idcancellation')
+    ->setName('change_idcancellation');
+
+// charts
+$app->get('/charts', 'App\Controller\WebController:charts')
+    ->setName('charts');
+
+// maps
+$app->get('/maps', 'App\Controller\WebController:maps')
+    ->setName('maps');
 
 /****************************************/
 /*          User Management             */
