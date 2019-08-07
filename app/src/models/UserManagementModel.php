@@ -269,7 +269,7 @@ final class UserManagementModel extends BaseModel
 	public function getSensorByusn($sensor) {   
 		$sql = "SELECT * FROM Sensor WHERE s_user = ?";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($sensor['usn']));
+		$sth->execute(array($sensor));
 		
 		$result = $sth->fetchAll();
 
@@ -334,6 +334,4 @@ final class UserManagementModel extends BaseModel
 			return FALSE;
 		}		
 	}
-
-
 }

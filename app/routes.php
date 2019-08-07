@@ -75,6 +75,10 @@ $app->post('/forgot_password', 'App\Controller\UserManagementController:forgot_p
 $app->post('/change_password', 'App\Controller\UserManagementController:change_password')
 ->setName('change_password');
 
+//user cancellation check page
+$app->post('/delete_account_check', 'App\Controller\UserManagementController:delete_account_check')
+->setName('delete_account_check');
+
 //user cancellation
 $app->post('/delete_account', 'App\Controller\UserManagementController:delete_account')
 ->setName('delete_account');
