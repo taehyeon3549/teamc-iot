@@ -71,7 +71,7 @@ $app->post('/check_certification', 'App\Controller\UserManagementController:chec
 ->setName('check_certification');
 
 //change the certi_state
-$app->post('/change_certification', 'App\Controller\UserManagementController:change_certification')
+$app->get('/verify/{code}', 'App\Controller\UserManagementController:change_certification')
 ->setName('change_certification');
 
 //sign_in

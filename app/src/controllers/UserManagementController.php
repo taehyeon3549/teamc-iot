@@ -497,12 +497,17 @@ final class UserManagementController extends BaseController
 	{
 		//Store input email
 		//if(!isset($data[]))
-		$certi_code = $request->getParsedBody()['code'];
+		//$certi_code = $request->getParsedBody()['code'];
+		
+		$certi_code = $args['code'];
 
 		//Change the state
 		if($this->UserManagementModel->changeCertifi($certi_code)){
-			$result['header'] = "Change the state success";
-			$result['message'] = "0";
+			// $result['header'] = "Change the state success";
+			// $result['message'] = "0";
+			$this->view->render($response, 'register_email_certification.html');
+			return $response;
+			
 		}else{
 			$result['header'] = "Change the state fail";
 			$result['message'] = "1";
