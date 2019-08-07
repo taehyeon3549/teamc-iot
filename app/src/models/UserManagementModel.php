@@ -152,8 +152,6 @@ final class UserManagementModel extends BaseModel
 		$sql = "UPDATE Certification SET certi_code = ? , certi_state = ? WHERE certi_email = ?";
 		$sth = $this->db->prepare($sql);
 		
-		echo($num);
-		
 		if($sth->execute(array($info['code'], $num, $info['email']))){
 			//success
 			return TRUE;
