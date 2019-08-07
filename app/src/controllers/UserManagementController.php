@@ -46,12 +46,85 @@ final class UserManagementController extends BaseController
 			if($type == 0){
 				//certification mail
 				$mail->Subject = "Please check this mail to Certification!";
-				$mail->Body = '<b><a href = '.'>http://teamc-iot.calit2.net/'.$code.'<'.'/a></br>This message is sent by team c, jane</b>';
+				$mail->Body = '<body style="margin: 0; padding: 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+					<tr>
+						<td align="center" bgcolor="#01dea5" style="padding: 40px 0 30px 0;">
+							<img src= "http://teamc-iot.calit2.net/mail_iconn.png" alt="Thank you for certification!!" height="230" style="display: block;width: 100%"/>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#f8f9fa" style="padding: 40px 30px 40px 30px;">
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td>
+										<h4>
+											 If you want to join our member, Click the Link!!!
+										</h4>
+									</td>
+								</tr>
+								<tr align="center" style="height: 200px;">
+									<td>
+										<h2><b><a href = http://teamc-iot.calit2.net/verify/'.$code.'>http://teamc-iot.calit2.net/verify/'.$code.'</a></b></h2>
+									</td>
+								</tr>
+								<tr>
+									<td>
+									   
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#2e9afe" style="color:white;">
+							This email is sent by QI teamc.
+						</td>
+					</tr>
+				</table>
+			</body>';
+				//'<b><a href = '.'>http://teamc-iot.calit2.net/'.$code.'<'.'/a></br>This message is sent by team c, jane</b>';
 				$mail->AltBody = 'Please click the link to activate your account.';
 			}else if($type == 1){
 				//forgotten password
 				$mail->Subject = "If click this link, you can change the password";
-				$mail->Body = '<b><a href = '.'>http://teamc-iot.calit2.net/'.$code.'<'.'/a></br>This message is sent by team c, jane</b>';
+				$mail->Body = '<body style="margin: 0; padding: 0;">
+				<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+					<tr>
+						<td align="center" bgcolor="#01dea5" style="padding: 40px 0 30px 0;">
+							<img src= "http://teamc-iot.calit2.net/mail_iconn.png" alt="Change your password" height="230" style="display: block;width: 100%"/>
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#f8f9fa" style="padding: 40px 30px 40px 30px;">
+							<table border="0" cellpadding="0" cellspacing="0" width="100%">
+								<tr>
+									<td>
+										<h4>
+											 If you want to Change your password, Click the Link!!!
+										</h4>
+									</td>
+								</tr>
+								<tr align="center" style="height: 200px;">
+									<td>
+										<h2><b><a href = http://teamc-iot.calit2.net/pass/'.$code.'>http://teamc-iot.calit2.net/pass/'.$code.'</a></b></h2>
+									</td>
+								</tr>
+								<tr>
+									<td>
+									   
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#2e9afe" style="color:white;">
+							This email is sent by QI teamc.
+						</td>
+					</tr>
+				</table>
+			</body>';
 				$mail->AltBody = 'Please click the link to change your password.';
 			}			
 			
@@ -79,6 +152,12 @@ final class UserManagementController extends BaseController
 		}
 
 		return $randomString;
+	}
+	
+	//mailicon
+	public function mailicon(Request $request, Response $response, $args)
+	{
+		echo '<img src="mail_iconn.png" />';
 	}
 
 //Sign_up
