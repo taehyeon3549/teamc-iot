@@ -6,6 +6,17 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 final class WebController extends BaseController
 {
+    protected $logger;
+	protected $WebModel;
+	protected $view;
+
+	public function __construct($logger, $WebModel, $view)
+	{
+		$this->logger = $logger;
+		$this->WebModel = $WebModel;
+		$this->view = $view;
+    }
+    
     public function dispatch(Request $request, Response $response, $args)
     {
         $this->logger->info("Home page action dispatched");
@@ -38,9 +49,17 @@ final class WebController extends BaseController
     {
         $this->logger->info("sign_up page action dispatched");
 
-        $this->flash->addMessage('info', 'sign_up page load');
+        //$this->flash->addMessage('info', 'sign_up page load');
 
-        $this->view->render($response, 'register.html');
+        $code = $args['code'];      //Get the code value
+        
+        //Get email using by certi_code
+        $val = $this->WebModel->getEmail($code);
+        $email = $val['certi_email'];
+        
+        //$this->view->render($response, 'register.html', array('code' => $code));
+        $this->view->render($response, 'register.twig', ['email' => $email]);
+        //$this->view->render($response, 'register.php');
         return $response;
     }
 

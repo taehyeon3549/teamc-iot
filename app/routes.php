@@ -23,7 +23,7 @@ $app->get('/forgot-password', 'App\Controller\WebController:forgotten_password')
     ->setName('forgot-password');
 
 // Sign_up
-$app->get('/sign_up', 'App\Controller\WebController:sign_up')
+$app->get('/sign_up/{code}', 'App\Controller\WebController:sign_up')
     ->setName('sign_up');  
 
 // register_email_message

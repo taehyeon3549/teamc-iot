@@ -23,7 +23,7 @@ $container['view'] = function($container){
 	 return $view;
 };
 
-/*
+
 // Twig
 $container['view'] = function ($c) {
     $settings = $c->get('settings');
@@ -35,7 +35,7 @@ $container['view'] = function ($c) {
 
     return $view;
 };
-*/
+
 
 // Flash messages
 $container['flash'] = function ($c) {
@@ -88,6 +88,15 @@ $container['App\Controller\HomeController'] = function ($c) {
     return new App\Controller\HomeController($c);
 };
 
+//Web controller
+$container['App\Controller\WebController'] = function ($container) {
+	$logger = $container->get('logger');
+	$webModel = $container->get('webModel');
+	$view = $container->get('view');
+
+    return new App\Controller\WebController($logger, $webModel, $view);
+};
+
 //Backend controller
 $container['App\Controller\BackendController'] = function ($container) {
 	$logger = $container->get('logger');
@@ -117,6 +126,13 @@ $container['App\Controller\SensorManagementController'] = function ($container) 
 //-----------------------------------------------------------------------------
 // Model factories
 // -----------------------------------------------------------------------------
+$container['webModel'] = function ($container) {
+    $settings = $container->get('settings');
+    $webModel = new App\Model\WebModel($container->get('db'));
+	
+    return $webModel;
+};
+
 $container['backendModel'] = function ($container) {
     $settings = $container->get('settings');
     $backendModel = new App\Model\BackendModel($container->get('db'));

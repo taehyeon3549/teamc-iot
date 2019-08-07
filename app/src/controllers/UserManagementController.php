@@ -503,19 +503,21 @@ final class UserManagementController extends BaseController
 
 		//Change the state
 		if($this->UserManagementModel->changeCertifi($certi_code)){
-			// $result['header'] = "Change the state success";
-			// $result['message'] = "0";
-			$this->view->render($response, 'register_email_certification.html');
-			return $response;
-			
+			 //$result['header'] = "Change the state success";
+			 //$result['message'] = "0";
+
+			//Show up sign up page
+			echo("<script>alert('Certification success')</script>");
+			//Add certi_code when open the sign up page
+			echo("<script>location.href='/sign_up/".$certi_code."';</script>");			
 		}else{
 			$result['header'] = "Change the state fail";
 			$result['message'] = "1";
-		}
 
-		return $response->withStatus(200)
-		->withHeader('Content-Type', 'application/json')
-		->write(json_encode($result, JSON_NUMERIC_CHECK));
+			return $response->withStatus(200)
+			->withHeader('Content-Type', 'application/json')
+			->write(json_encode($result, JSON_NUMERIC_CHECK));
+		}		
 	}
 
 //Check the user are exsit
