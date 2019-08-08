@@ -50,6 +50,7 @@ $app->get('/charts', 'App\Controller\WebController:charts')
 $app->get('/maps', 'App\Controller\WebController:maps')
     ->setName('maps');
 
+
 /****************************************/
 /*          User Management             */
 /****************************************/
@@ -108,6 +109,10 @@ $app->post('/delete_account', 'App\Controller\UserManagementController:delete_ac
 
 //logo_img
 $app->get('/mailicon', 'App\Controller\UserManagementController:mailicon')
+->setName('mailicon');
+
+//show up change password page
+$app->get('/pass/{code}', 'App\Controller\UserManagementController:change_password_page')
 ->setName('mailicon');
 
 /****************************************/

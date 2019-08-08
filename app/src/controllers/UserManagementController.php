@@ -676,6 +676,41 @@ public function change_certification_app(Request $request, Response $response, $
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
 	}
 
+	//Change the password (In email Link)
+	public function change_password_page(Request $request, Response $response, $args)
+	{		
+		$certi_code = $args['code'];
+
+		//check is certicode is valible
+		if($this->UserManagementModel->checkCertificode($certi_code)){
+			//Add the certi_code back on the url
+			//echo("<script>location.href='/pass/'".$certi_code.";</script>");
+			//Then, get email from certification table used by certi_code
+			$certi = $this->UserManagementModel->getCertifi($certi_code);
+			
+			if($certi['certi_email'] != NULL){
+				//get usn from user table used by email
+				$user = $this->UserManagementModel->getUserInfo_email($certi['certi_email']);
+				if($user['USN'] != NULL){					
+					$usn = $user['USN'];
+					$this->view->render($response, 'new-password.twig', ['code' => $certi_code, 'usn' => $usn]);
+        			return $response;
+				}else{
+					echo("<script>alert('Not runnable.')</script>");
+					echo("<script>location.href='/';</script>");	
+				}
+			}else{
+				echo("<script>alert('Not runnable.')</script>");
+				echo("<script>location.href='/';</script>");
+			}
+		}else{
+			echo("<script>alert('Not runnable.')</script>");
+			echo("<script>location.href='/';</script>");	
+		}
+
+		return TRUE;
+	}
+
 
 //inssert sensor data	
 	public function insertSensor(Request $request, Response $response, $args)

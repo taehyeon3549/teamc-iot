@@ -160,5 +160,5 @@ final class WebController extends BaseController
 
         $this->view->render($response, 'google_geolocation.html');
         return $response;
-    }   
+    }      
 }

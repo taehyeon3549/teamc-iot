@@ -332,4 +332,31 @@ final class UserManagementModel extends BaseModel
 			return FALSE;
 		}		
 	}
+
+	//Get certificaton table info used by certi_code
+	public function getCertiinfo($code) {   
+		$sql = "SELECT * FROM Certification WHERE certi_code = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($code));
+
+		$result = $sth->fetchAll();
+		
+		return $result[0];
+	}
+
+	//check the certification code is valible
+	public function checkCertificode($code) {   
+		$sql = "SELECT * FROM Certification WHERE certi_code = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($code));
+
+		$result = $sth->fetchAll();
+		$num = count($result);
+		
+		if($num > 0){
+			return TRUE;
+		}else{
+			return FALSE;
+		}		
+	}
 }
