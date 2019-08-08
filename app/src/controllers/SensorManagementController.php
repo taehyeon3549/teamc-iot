@@ -28,10 +28,7 @@ final class SensorManagementController extends BaseController
 		$sensor['sensor_name'] = $request->getParsedBody()['sensor_name'];
 		$sensor['state'] = 1;
 
-		//echo($sensor['mac']);
-		//check duplicate of mac address
-		$value = $this->SensorManagementModel->checkSensor($sensor);
-
+		//check duplicate of mac address	
 		if($this->SensorManagementModel->checkSensor($sensor) == 0){
 			//not exist go ahead
 			//Check the empty ssn
@@ -46,17 +43,26 @@ final class SensorManagementController extends BaseController
 			//Register the sensor
 			if($this->SensorManagementModel->regitSensor($sensor)){
 				//success register the sensor
+				//get Insert sensor's info
+				$info = $this->SensorManagementModel->getSensorBymac($sensor['mac']);
+				
 				$result['header'] = "Registeration success";
-				$result['message'] = "0";
+				$result['message'] = [];
+				$result['message']['result'] = 0;
+				$result['message']['ssn'] = $info['SSN'];
+				$result['message']['mac'] = $info['s_MAC'];
+				$result['message']['sensor_name'] = $info['s_name'];
 			}else{
 				//fail register the sensor
 				$result['header'] = "Registeration fail";
-				$result['message'] = "2";
+				$result['message'] = [];
+				$result['message']['result'] = 2;
 			}						
 		}else{
 			//exist
 			$result['header'] = "Already exist the sensor";
-			$result['message'] = "1";
+			$result['message'] = [];
+			$result['message']['result'] = 1;
 		}
 
 		return $response->withStatus(200)

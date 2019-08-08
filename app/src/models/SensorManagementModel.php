@@ -13,7 +13,7 @@ final class SensorManagementModel extends BaseModel
 		$num = count($result);
 
 		if($num == 0){
-			//sensor not exsit
+			//sensor not exsit			
 			$val = 0;
 		}else{
 			//sensor exsit
@@ -33,6 +33,17 @@ final class SensorManagementModel extends BaseModel
 		}else{
 			return FALSE;
 		}		
+	}
+
+	
+	//Get sensor info
+	public function getSensorBymac($sensor){
+		$sql = "SELECT * FROM Sensor WHERE s_MAC = ?";
+		$sth = $this->db->prepare($sql);
+		$sth->execute(array($sensor));
+		$result = $sth->fetchAll();
+
+		return $result[0];
 	}
 
 	//Delete air sensor value
