@@ -38,7 +38,6 @@
           <div class="form-group">
             <div class="form-label-group">
               <input type="email" name= "email" id="inputEmail" class="form-control" placeholder="Email address" required="required" value={{email}} disabled>
-              
               <label for="inputEmail">Email address</label>
             </div>
           </div>
@@ -46,13 +45,13 @@
             <div class="form-row">
               <div class="col-md-6">
                 <div class="form-label-group">
-                  <input type="text" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
+                  <input type="text" name = "firstName" id="firstName" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
                   <label for="firstName">First name</label>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-label-group">
-                  <input type="text" id="lastName" class="form-control" placeholder="Last name" required="required">
+                  <input type="text" name = "lastName" id="lastName" class="form-control" placeholder="Last name" required="required">
                   <label for="lastName">Last name</label>
                 </div>
               </div>
@@ -62,13 +61,13 @@
             <div class="form-row">
               <div class="col-md-6">
                 <div class="form-label-group">
-                  <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="required">
+                  <input type="password" name = "inputPassword" id="inputPassword" class="form-control" placeholder="Password" required="required">
                   <label for="inputPassword">Password</label>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-label-group">
-                  <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required="required">
+                  <input type="password" name = "confirmPassword" id="confirmPassword" class="form-control" placeholder="Confirm password" required="required">
                   <label for="confirmPassword">Confirm password</label>
                 </div>
               </div>
@@ -78,24 +77,92 @@
             <div class="form-row">
               <div class="col-md-6">
                 <div class="form-label-group">
-                  <input type="date" id="Birth" class="form-control" placeholder="First name" required="required" autofocus="autofocus">
+                  <input type="date" name = "Birth" id="Birth" class="form-control" placeholder="First name" required="required" autofocus="autofocus" style="padding-top: 0px; padding-left: 0px; padding-right: 0px; padding-bottom: 0px;">
                 </div>
               </div>            
-              <div class="col-md-6"><br>
-                <button type="button" class="btn btn-success" data-toggle="button">Male</button>
-                <button type="button" class="btn btn-warning" data-toggle="button">Female</button>
+              <div class="col-md-6">
+                <div class="form-label-group" style="padding-bottom: 5px; padding-top: 8px;">
+                  <input type="radio" name ="gender" value ='0'>Male
+						      <input type="radio" name ="gender" value ='1'>Female						
+                </div>
               </div>
             </div>
           </div>
-          <a class="btn btn-primary btn-block" id=registerb href="login.html">Register</a>
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-label-group">
+                  <input type="phone" name = "emergencycall" id="emergencycall" class="form-control" placeholder="Emergency Call" required="required">
+                  <label for="emergencycall">Emergency Call</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a class="btn btn-primary btn-block" id = "registerb">Register</a>
         </form>
         <div class="text-center">
           <a class="d-block small mt-3" href="/">Login Page</a>
           <a class="d-block small" href="/forgot-password">Forgot Password?</a>
         </div>
+
+        <!-- Button Action -->
         <script type="text/javascript">
-          document.getElementById("registerb").addEventListener('click', function(){alert("sign up success");});
+          document.getElementById("registerb").addEventListener('click', function(){
+            // Check the value are all filled
+            var firstName = $('input[name = firstName]').val();
+            var lastName = $('input[name = lastName]').val();
+            var inputPassword = $('input[name = inputPassword]').val();
+            var confirmPassword = $('input[name = confirmPassword]').val();
+            var Birth = $('input[name = Birth]').val();
+            var gender = $('input[name=gender]:checked').val();
+            var emergency = $('input[name = emergencycall]').val();
+
+            if(firstName == ""){
+              alert("Please, Enter the firstname");
+            }else if(lastName == ""){
+              alert("Please, Enter the lastname");
+            }else if(inputPassword == ""){
+              alert("Please, Enter the inputpassword");
+            }else if(confirmPassword == ""){
+              alert("Please, Enter the comfirmpassword");
+            }else if(Birth == ""){
+              alert("Please, Enter the birth");
+            }else if(inputPassword != confirmPassword){
+              alert("Please, Enter two passwords are compared.");
+            }else{
+              var name = firstName.concat("", lastName);
+              
+              //send json
+              $.ajax({
+              method: "POST",
+              url: "/signup_proc",
+              data: {
+                "id": $('input[name = email]').val(),                
+                "name": name,
+                "password": inputPassword,
+                "birth": Birth,
+                "gender": gender,
+                "emergency": emergency               
+              }
+              }).done(function( msg ) {
+                  //If sign_up success, show up the sign in page
+                  if(msg.message == 0){
+                    alert("Welcome!! Now you are our member.");
+                    location.href = "/";
+                  }
+                  if(msg.message == 1){
+                    alert("You are already have a count!!");
+                    location.href = "/";
+                  }
+                  if(msg.message == 2){
+                    alert("Sorry, Could you sign up again? Server Error");
+                    location.href = "/sign_up";
+                  }
+              });         
+            }
+          });       
         </script>
+        </div>
       </div>
     </div>
   </div>
