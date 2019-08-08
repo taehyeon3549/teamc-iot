@@ -33,55 +33,7 @@
         </form>
         
         <div class="text-center">
-          Certification Success! Click the bottom text, 'Next' and Fill the information form!
-          <a class="d-block mt-3" id = "signupb" href="/sign_up">Next</a>
-          
-          <!-- button action
-          <script type="text/javascript">
-            //When click the login btn
-            document.getElementById("signupb").addEventListener('click', function(){
-              // Check the value are all filled
-
-              //여기 email 값이나 code 값을 어떻게 들고 오지 ?>>????
-              var email = $('input[name = email]').val();
-              var pass = $('input[name = pass]').val();
-  
-              if(($("#inputEmail").length == 0)){
-                alert("Please, Enter the email");
-              }else if(($("#inputPassword").length == 0)){
-                alert("Please, Enter the password");
-              }else{
-                //send json
-                $.ajax({
-                method: "POST",
-                url: "/signin_proc",
-                data: {
-                  "id": $('input[name = email]').val(),                
-                  "pw": $('input[name = pass]').val()                
-                }
-                }).done(function( msg ) {
-                    //If sign_up success, show up the sign in page
-                    if(msg.message == 0){
-                      alert("Welcome!!");
-                      location.href = "/main";
-                    }
-                    if(msg.message == 1){
-                      alert("Please, check your password again.");
-                      location.href = "/";
-                    }
-                    if(msg.message == 2){
-                      alert("You don't have account. Why don't you join our member");
-                      location.href = "/sign_up";
-                    }
-                    if(msg.message == 3){
-                      alert("You didn't certifate. Please, check your email.");
-                      location.href = "/";
-                    }
-                });         
-              }
-            });
-          </script>
-          -->
+          Certification Success! Keep trying in your app!!          
         </div>
       </div>
     </div>

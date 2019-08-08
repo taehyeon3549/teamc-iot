@@ -62,16 +62,20 @@ $app->post('/signup_proc', 'App\Controller\UserManagementController:signup_proc'
 $app->post('/check_user', 'App\Controller\UserManagementController:check_user')
 ->setName('check_user');
 
-//click_verify
-$app->post('/click_verify', 'App\Controller\UserManagementController:click_verify')
+//click_verify btn
+$app->post('/click_verify/{where}', 'App\Controller\UserManagementController:click_verify')
 ->setName('click_verify');
 
-//certification check
+//certification check(click next button)
 $app->post('/check_certification', 'App\Controller\UserManagementController:check_certification')
 ->setName('check_certification');
 
-//change the certi_state
-$app->get('/verify/{code}', 'App\Controller\UserManagementController:change_certification')
+//change the certi_state - web(click link in email)
+$app->get('/verify/web/{code}', 'App\Controller\UserManagementController:change_certification')
+->setName('change_certification');
+
+//change the certi_state - app(click link in email)
+$app->get('/verify/app/{code}', 'App\Controller\UserManagementController:change_certification_app')
 ->setName('change_certification');
 
 //sign_in

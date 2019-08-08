@@ -21,7 +21,8 @@ final class UserManagementController extends BaseController
 
 //Send email
 // return value : true, false
-	public function send_mail($who, $code, $type){
+// who : send to address,  code : certicate code,  client: web or app(where clicked),  type: 0=certification, 1=resetpassword
+	public function send_mail($who, $code, $client, $type){
 		$mail = new PHPMailer(true);		
 		try{
 			//Server settings
@@ -65,7 +66,7 @@ final class UserManagementController extends BaseController
 								</tr>
 								<tr align="center" style="height: 200px;">
 									<td>
-										<h2><b><a href = http://teamc-iot.calit2.net/verify/'.$code.'>http://teamc-iot.calit2.net/verify/'.$code.'</a></b></h2>
+										<h2><b><a href = http://teamc-iot.calit2.net/verify/'.$client.'/'.$code.'>http://teamc-iot.calit2.net/verify/'.$client.'/'.$code.'</a></b></h2>
 									</td>
 								</tr>
 								<tr>
@@ -317,7 +318,7 @@ final class UserManagementController extends BaseController
 			if($this->UserManagementModel->updateCertifi($info, 0)){
 				//success
 				//send password change eamil
-				if($this->send_mail($info['email'], $info['code'], 1)){
+				if($this->send_mail($info['email'], $info['code'], NULL, 1)){
 					//success
 					$result['header'] = "Send email success";
 					$result['message'] = "0";	
@@ -405,6 +406,14 @@ final class UserManagementController extends BaseController
 //0: send email success, 1: already have account, 2: send email fail, 3: insert certification table fail, 4: update certification table fail--------------------------------------
 	public function click_verify(Request $request, Response $response, $args)
 	{
+		//Get which client clicked
+		//0: web , 1: app
+		if($args['where'] == 0){
+			$client = "web";
+		}else{
+			$client = "app";
+		}
+
 		//Store input email
 		$email_address = $request->getParsedBody()['id'];
 		//$email_address = 'xogusrla09@gmail.com';
@@ -429,7 +438,7 @@ final class UserManagementController extends BaseController
 				if($this->UserManagementModel->updateCertifi($certi, 1)){
 					//update certification table success
 					//Send certification email
-					if($this->send_mail($certi['email'], $certi['code'], 0)){
+					if($this->send_mail($certi['email'], $certi['code'], $client, 0)){
 						$result['header'] = "Send email success";
 						$result['message'] = "0";	
 					}else{
@@ -446,7 +455,7 @@ final class UserManagementController extends BaseController
 				//Insert the user data in certification table in DB			
 				if($this->UserManagementModel->addCertifi($certi) == 0){
 					//Send certification email
-					if($this->send_mail($certi['email'], $certi['code'], 0)){
+					if($this->send_mail($certi['email'], $certi['code'], $client, 0)){
 						$result['header'] = "Send email success";
 						$result['message'] = "0";	
 					}else{
@@ -519,6 +528,40 @@ final class UserManagementController extends BaseController
 			->write(json_encode($result, JSON_NUMERIC_CHECK));
 		}		
 	}
+
+//Change the certi_state in Certification table(In email Link)
+public function change_certification_app(Request $request, Response $response, $args)
+{
+	//Store input email
+	//if(!isset($data[]))
+	//$certi_code = $request->getParsedBody()['code'];
+	
+	$certi_code = $args['code'];
+
+	//Change the state
+	if($this->UserManagementModel->changeCertifi($certi_code)){
+		$result['header'] = "Change the state success";
+		$result['message'] = "0";
+
+		//show up certificate success
+		$this->view->render($response, 'register_email_certification.html');
+		//echo("<script>location.href='/register_email_certification';</script>");
+		/*
+		//Show up sign up page
+		echo("<script>alert('Certification success')</script>");
+		//Add certi_code when open the sign up page
+		echo("<script>location.href='/sign_up/".$certi_code."';</script>");			
+		*/
+	}else{
+		$result['header'] = "Change the state fail";
+		$result['message'] = "1";
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}		
+}
+
 
 //Check the user are exsit
 	public function check_user(Request $request, Response $response, $args)
