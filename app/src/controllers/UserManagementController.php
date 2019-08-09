@@ -746,4 +746,26 @@ public function change_certification_app(Request $request, Response $response, $
 		->withHeader('Content-Type', 'application/json')
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
 	}
+
+	//Get user info
+	public function userinfo(Request $request, Response $response, $args)
+	{
+		$usn = $args['usn'];
+
+		$userinfo = $this->UserManagementModel->getUserInfo_usn($usn);
+		
+		$result['email'] = $userinfo['email'];
+		$result['name'] = $userinfo['name'];
+		if($userinfo['gender'] == 0){
+			$result['gender'] = "Male";
+		}else{
+			$result['gender'] = "Female";
+		}
+		$result['birth'] = $userinfo['birth'];
+		$result['emergency'] = $userinfo['emergency_call'];
+		
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
 }

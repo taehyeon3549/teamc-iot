@@ -103,32 +103,6 @@
 
   <!-- Google Chart-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<<<<<<< HEAD
-  <script>
-    google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawVisualization);
-
-      function drawVisualization() {
-        // Some raw data (not necessarily accurate)
-        var data = google.visualization.arrayToDataTable([
-          ['Day', 'PM2.5', 'PM10', 'CO', 'NO2', 'SO2', 'O3','temperature', 'AQI'],
-          ['08/09',  4.8, 40.8, 3.8, 1, 37.8, 30.8, 21.8, 400.3],
-          
-        ]);
-
-        var options = {
-          title : 'Monthly Coffee Production by Country',
-          vAxis: {title: 'Cups'},
-          hAxis: {title: 'Month'},
-          seriesType: 'bars',
-          series: {5: {type: 'line'}}
-        };
-
-        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
-</script>
-=======
   <script type="text/javascript">
     google.charts.load('current', { 'packages': ['line', 'corechart'] });
     google.charts.setOnLoadCallback(drawChart);
@@ -194,10 +168,15 @@
       chart.draw(data, google.charts.Line.convertOptions(options));
     }
   </script>
->>>>>>> 45de0769d42c762ecc3045630da85553788e3f1e
 </head>
 
 <body id="page-top">
+  <!--IF user not login go to login page-->
+  <script>
+    if(sessionStorage.getItem('usn') == null){
+      location.href = "/";
+    }
+    </script>
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
     <a class="navbar-brand mr-1" href="/main">Farm-ing</a>
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
@@ -208,7 +187,7 @@
 		<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
         <div class="input-group">    
           <div class="input-group-append">           
-              <i class="fas fa-search"></i>           
+              <i></i>           
           </div>
         </div>
       </form>
@@ -220,9 +199,17 @@
           aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-user-circle fa-fw"></i>
         </a>
+        
+        <!-- 회원 아이콘-->
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+          <a>Hi, 
+            <script>
+                var name = sessionStorage.getItem('name');
+                document.write(name);
+              </script>
+           </a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
+          <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal">Logout</a>
         </div>
       </li>
     </ul>
@@ -284,7 +271,7 @@
           </div>
           <div class="card-body">
             <!-- 차트 그림은 이거 복붙-->
-            <div id="chart_div" style="width: 900px; height: 500px;"></div>
+            <div id="linechart_material" style="width: 900px; height: 500px;"></div>
           </div>
         </div>
 
@@ -392,10 +379,35 @@
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-body">Do you want to quit our 'Farming'?</div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="/">Logout</a>
+          <a class="btn btn-primary" id = "logoutb">Logout</a>
+          <!-- LogOut btn action -->
+          <script type="text/javascript">
+            document.getElementById("logoutb").addEventListener('click', function(){
+              // Check the value are all filled
+              var usn = sessionStorage.getItem('usn');
+                //send json
+                $.ajax({
+                method: "POST",
+                url: "/signout_proc",
+                data: {
+                  "usn": usn 
+                }
+                }).done(function( msg ) {
+                    if(msg.message == 0){
+                      //logout success
+                      //sessionStorage clear
+                      sessionStorage.clear();                                           
+                      location.href = "/";
+                    }
+                    if(msg.message == 1){
+                      alert("Please, try logout again.");
+                    }                    
+                });
+            });
+          </script>
         </div>
       </div>
     </div>

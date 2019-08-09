@@ -107,6 +107,10 @@ $app->post('/delete_account_check', 'App\Controller\UserManagementController:del
 $app->post('/delete_account', 'App\Controller\UserManagementController:delete_account')
 ->setName('delete_account');
 
+//get user info
+$app->get('/userinfo/{usn}', 'App\Controller\UserManagementController:userinfo')
+->setName('userinfo');
+
 //logo_img
 $app->get('/mailicon', 'App\Controller\UserManagementController:mailicon')
 ->setName('mailicon');
