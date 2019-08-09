@@ -135,9 +135,18 @@ $app->post('/deregistrationSensor', 'App\Controller\SensorManagementController:d
 $app->post('/sensorList', 'App\Controller\SensorManagementController:sensorList')
 ->setName('sensorList');
 
-//insert_Sensor value
-$app->post('/insertSensor', 'App\Controller\SensorManagementController:insertSensor')
-->setName('insertSensor');
+//insertAirSensor value
+$app->post('/insertAirSensor', 'App\Controller\SensorManagementController:insertAirSensor')
+->setName('insertAirSensor');
+
+//insertPolarSensor value
+$app->post('/insertPolarSensor', 'App\Controller\SensorManagementController:insertPolarSensor')
+->setName('insertPolarSensor');
+
+//Show realtime value
+$app->post('/showRealdata', 'App\Controller\SensorManagementController:showRealdata')
+->setName('showRealdata');
+
 
 
 /****************************************/

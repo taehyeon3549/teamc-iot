@@ -136,10 +136,11 @@ final class SensorManagementController extends BaseController
 	}
 
 	//insert sensor data	
-	public function insertSensor(Request $request, Response $response, $args)
+	public function insertAirSensor(Request $request, Response $response, $args)
 	{
 		$senosr = [];
 
+		$sensor['usn'] = $request->getParsedBody()['usn'];
 		$sensor['ssn'] = $request->getParsedBody()['ssn'];
 		$sensor['pm2_5'] = $request->getParsedBody()['pm2_5'];
 		$sensor['pm10'] = $request->getParsedBody()['pm10'];
@@ -153,18 +154,90 @@ final class SensorManagementController extends BaseController
 		$sensor['time'] = $request->getParsedBody()['time'];
 
 
-		if($this->SensorManagementModel->insertSensorData($sensor) > 0){
-			//Already exist the email, make response 1
-			$result['header'] = "Miss";
-			$result['message'] = "1";
-		}else{
-			//Not exist the eamil, make response 0
+		if($this->SensorManagementModel->insertAirdata($sensor)){
 			$result['header'] = "success";
-			$result['message'] = "0";	
+			$result['message'] = "0";
+		}else{
+			$result['header'] = "fail";
+			$result['message'] = "1";	
 		}
 
 		return $response->withStatus(200)
 		->withHeader('Content-Type', 'application/json')
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
 	}
+
+	//insert sensor data	
+	public function insertPolarSensor(Request $request, Response $response, $args)
+	{
+		$senosr = [];
+
+		$sensor['usn'] = $request->getParsedBody()['usn'];
+		$sensor['ssn'] = $request->getParsedBody()['ssn'];
+		$sensor['heartrate'] = $request->getParsedBody()['heartrate'];
+		$sensor['RR_interval'] = $request->getParsedBody()['RR_interval'];
+		$sensor['latitude'] = $request->getParsedBody()['latitude'];
+		$sensor['longitude'] = $request->getParsedBody()['longitude'];
+		$sensor['time'] = $request->getParsedBody()['time'];
+
+		if($this->SensorManagementModel->insertPolardata($sensor)){
+			$result['header'] = "success";
+			$result['message'] = "0";
+		}else{
+			$result['header'] = "fail";
+			$result['message'] = "1";	
+		}
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
+
+	//showRealair	
+	public function showRealdata(Request $request, Response $response, $args)
+	{
+		$senosr = [];
+
+		$sensor['ssn'] = $request->getParsedBody()['ssn'];
+		$sensor['sensor_name'] = $request->getParsedBody()['sensor_name'];
+
+		$data = $this->SensorManagementModel->showRealdata($sensor);
+		$num = count($data);
+
+		if($num > 0){
+			$result['header'] = "success";
+			$result['message'] = [];
+			
+			$str = explode('_', $sensor['sensor_name']);
+
+			if($str[0] == "Air"){
+				$result['message']['PM2_5'] = $data['a_PM2_5'];
+				$result['message']['PM10'] = $data['a_PM10'];
+				$result['message']['o3'] = $data['a_O3'];
+				$result['message']['co'] = $data['a_CO'];
+				$result['message']['no2'] = $data['a_NO2'];
+				$result['message']['so2'] = $data['a_SO2'];
+				$result['message']['temperture'] = $data['a_Temperture'];
+				$result['message']['latitude'] = $data['a_latitude'];
+				$result['message']['longitude'] = $data['a_longitude'];
+				$result['message']['time'] = $data['a_time'];
+
+				$result['result'] = "0";
+			}else{
+				$result['message']['heartrate'] = $data['p_heartrate'];
+				$result['message']['rr_interval'] = $data['p_RR_interval'];
+				$result['message']['latitude'] = $data['p_longitude'];
+				$result['message']['longitude'] = $data['p_longitude'];
+				$result['message']['time'] = $data['p_time'];
+			}	
+		}else{
+			$result['header'] = "fail";
+			$result['message'] = "1";	
+		}
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
+
 }

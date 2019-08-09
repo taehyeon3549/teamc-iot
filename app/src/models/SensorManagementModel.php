@@ -106,4 +106,49 @@ final class SensorManagementModel extends BaseModel
 		
 		return $result[0];
 	}
+
+	//Insert airdata
+	public function insertAirdata($sensor){   
+		$sql = "INSERT INTO Air_Sensor_value (a_ssn, a_PM2_5, a_PM10, a_O3, a_CO, a_NO2, a_SO2, a_Temperture, a_latitude, a_longitude, a_time, a_usn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($sensor['ssn'], $sensor['pm2_5'], $sensor['pm10'], $sensor['o3'], $sensor['co'], $sensor['no2'], $sensor['so2'], $sensor['temperture'], $sensor['latitude'], $sensor['longitude'], $sensor['time'], $sensor['usn']))){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+	}
+
+	//Insert polardata
+	public function insertPolardata($sensor){   
+		$sql = "INSERT INTO Polar_Sensor_value (p_ssn, p_heartrate, p_RR_interval, p_latitude, p_longitude, p_time, p_usn) VALUES (?, ?, ?, ?, ?, ?, ?);";
+		
+		$sth = $this->db->prepare($sql);
+		
+		if($sth->execute(array($sensor['ssn'], $sensor['heartrate'], $sensor['RR_interval'], $sensor['latitude'], $sensor['longitude'], $sensor['time'], $sensor['usn']))){
+			return TRUE;
+		}else{
+			return FALSE;
+		}
+	}
+
+	//show airdata
+	public function showRealdata($sensor){
+		$str = explode('_', $sensor['sensor_name']);
+
+		if($str[0] == "Air"){
+			$sql = "SELECT * FROM Air_Sensor_value WHERE a_ssn = ? ORDER BY a_no DESC LIMIT 1";
+		}else{
+			$sql = "SELECT * FROM Polar_Sensor_value WHERE p_ssn = ? ORDER BY p_no DESC LIMIT 1";
+		}
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute(array($sensor['ssn']));
+
+		$result = $sth->fetchAll();
+		
+		return $result[0];
+	}
+
+
 }
