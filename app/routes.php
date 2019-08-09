@@ -147,6 +147,10 @@ $app->post('/insertPolarSensor', 'App\Controller\SensorManagementController:inse
 $app->post('/showRealdata', 'App\Controller\SensorManagementController:showRealdata')
 ->setName('showRealdata');
 
+//Show historical value
+$app->post('/showHistodata', 'App\Controller\SensorManagementController:showHistodata')
+->setName('showHistodata');
+
 
 
 /****************************************/

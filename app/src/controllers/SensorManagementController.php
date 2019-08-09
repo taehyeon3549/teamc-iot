@@ -240,4 +240,54 @@ final class SensorManagementController extends BaseController
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
 	}
 
+	//showHistodata	
+	public function showHistodata(Request $request, Response $response, $args)
+	{
+		$senosr = [];
+
+		$sensor['ssn'] = $request->getParsedBody()['ssn'];
+		$sensor['sensor_name'] = $request->getParsedBody()['sensor_name'];
+
+		$data = $this->SensorManagementModel->showHistodata($sensor);
+		$num = count($data);
+
+		if($num > 0){
+			$result['header'] = "success";
+			$result['message'] = [];
+			
+			$str = explode('_', $sensor['sensor_name']);
+
+			if($str[0] == "Air"){
+				for($i = 0 ; $i<$num; $i++){
+					$result['message'][$i]['PM2_5'] = $data[$i]['a_PM2_5'];
+					$result['message'][$i]['PM10'] = $data[$i]['a_PM10'];
+					$result['message'][$i]['o3'] = $data[$i]['a_O3'];
+					$result['message'][$i]['co'] = $data[$i]['a_CO'];
+					$result['message'][$i]['no2'] = $data[$i]['a_NO2'];
+					$result['message'][$i]['so2'] = $data[$i]['a_SO2'];
+					$result['message'][$i]['temperture'] = $data[$i]['a_Temperture'];
+					$result['message'][$i]['latitude'] = $data[$i]['a_latitude'];
+					$result['message'][$i]['longitude'] = $data[$i]['a_longitude'];
+					$result['message'][$i]['time'] = $data[$i]['a_time'];
+				}
+				$result['result'] = "0";
+			}else{
+				for($i = 0; $i<$num; $i++){
+					$result['message'][$i]['heartrate'] = $data[$i]['p_heartrate'];
+					$result['message'][$i]['rr_interval'] = $data[$i]['p_RR_interval'];
+					$result['message'][$i]['latitude'] = $data[$i]['p_latitude'];
+					$result['message'][$i]['longitude'] = $data[$i]['p_longitude'];
+					$result['message'][$i]['time'] = $data[$i]['p_time'];
+				}
+				$result['result'] = "0";
+			}	
+		}else{
+			$result['header'] = "fail";
+			$result['message'] = "1";	
+		}
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
 }

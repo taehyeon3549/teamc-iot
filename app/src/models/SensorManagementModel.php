@@ -132,7 +132,7 @@ final class SensorManagementModel extends BaseModel
 		}
 	}
 
-	//show airdata
+	//show realdata
 	public function showRealdata($sensor){
 		$str = explode('_', $sensor['sensor_name']);
 
@@ -148,6 +148,24 @@ final class SensorManagementModel extends BaseModel
 		$result = $sth->fetchAll();
 		
 		return $result[0];
+	}
+
+	//show histodata
+	public function showHistodata($sensor){
+		$str = explode('_', $sensor['sensor_name']);
+
+		if($str[0] == "Air"){
+			$sql = "SELECT * FROM Air_Sensor_value WHERE a_ssn = ? ORDER BY a_no DESC";
+		}else{
+			$sql = "SELECT * FROM Polar_Sensor_value WHERE p_ssn = ? ORDER BY p_no DESC";
+		}
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute(array($sensor['ssn']));
+
+		$result = $sth->fetchAll();
+		
+		return $result;
 	}
 
 
