@@ -151,6 +151,10 @@ $app->post('/showRealdata', 'App\Controller\SensorManagementController:showReald
 $app->post('/showHistodata', 'App\Controller\SensorManagementController:showHistodata')
 ->setName('showHistodata');
 
+//Get GPS
+$app->get('/getGPS', 'App\Controller\SensorManagementController:getGPS')
+->setName('getGPS');
+
 
 
 /****************************************/

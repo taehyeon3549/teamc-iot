@@ -152,8 +152,12 @@ final class SensorManagementController extends BaseController
 		$sensor['latitude'] = $request->getParsedBody()['latitude'];
 		$sensor['longitude'] = $request->getParsedBody()['longitude'];
 		$sensor['time'] = $request->getParsedBody()['time'];
-
-
+		$sensor['ap_pm2_5'] = $request->getParsedBody()['aq_pm2_5'];
+		$sensor['ap_o3'] = $request->getParsedBody()['ap_o3'];
+		$sensor['ap_co'] = $request->getParsedBody()['ap_co'];
+		$sensor['ap_no2'] = $request->getParsedBody()['ap_no2'];
+		$sensor['ap_so2'] = $request->getParsedBody()['ap_so2'];
+		
 		if($this->SensorManagementModel->insertAirdata($sensor)){
 			$result['header'] = "success";
 			$result['message'] = "0";
@@ -281,6 +285,30 @@ final class SensorManagementController extends BaseController
 				}
 				$result['result'] = "0";
 			}	
+		}else{
+			$result['header'] = "fail";
+			$result['message'] = "1";	
+		}
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
+
+	//getGPS	
+	public function getGPS(Request $request, Response $response, $args)
+	{
+		$data = $this->SensorManagementModel->getGPS();
+		$num = count($data);
+		$result = [];	
+		
+		//센서 이름 : {...}, 센서 위치 : {위도,경도}
+		if($num > 0){		
+			for ($i=0; $i < $num; $i++) { 
+				$name = $data[$i]['p_ssn'];
+				$sensor_name = $this->SensorManagementModel->getSensorByssn($name)['s_name'];
+				array_push($result, '"name" :"'.$sensor_name.'", "location" :['.$data[$i]["p_latitude"].','.$data[$i]["p_longitude"].']'); 			  
+			}
 		}else{
 			$result['header'] = "fail";
 			$result['message'] = "1";	
