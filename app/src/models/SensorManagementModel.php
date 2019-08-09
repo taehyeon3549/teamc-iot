@@ -92,7 +92,7 @@ final class SensorManagementModel extends BaseModel
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($sensor['usn']));		
 		$result = $sth->fetchAll();		
-		return $result[0];
+		return $result;
 	}
 
 

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -73,11 +74,23 @@
               }).done(function( msg ) {
                   //If sign_up success, show up the sign in page
                   if(msg.message == 0){
+                    //IF login success, get user's sensor data
+                    $.ajax({
+                      method: "POST",
+                      url: "/sensorList",
+                      data: {
+                        "usn": msg.usn                
+                      }
+                    }).done(function( msg ) {                  
+                      //Get usn and is_admin
+                      sessionStorage.setItem("sensor", JSON.stringify(msg.message));                      
+                    });         
                     alert("Welcome!!");
 
                     //Create session
                     //Get usn and is_admin
                     sessionStorage.setItem("usn", msg.usn);
+                    sessionStorage.setItem("name", msg.name);
                     sessionStorage.setItem("is_admin", msg.is_admin);
 
                     location.href = "/main";
@@ -94,7 +107,7 @@
                     alert("You didn't certifate. Please, check your email.");
                     location.href = "/";
                   }
-              });         
+              });
             }
           });
         </script>
