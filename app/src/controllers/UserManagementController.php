@@ -249,6 +249,7 @@ final class UserManagementController extends BaseController
 
 					$usn = $userInfo['USN'];
 					$is_admin = $userInfo['is_admin'];
+					$name = $userInfo['name'];
 
 					//then make login state to 1
 					if($this->UserManagementModel->changeSignin($info['email'])){
@@ -256,6 +257,7 @@ final class UserManagementController extends BaseController
 						$result['message'] = "0";
 						$result['usn'] = $usn;
 						$result['is_admin']	 = $is_admin;
+						$result['name'] = $name;
 					}
 				}		
 			}else{

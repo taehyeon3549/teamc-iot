@@ -113,13 +113,22 @@ final class SensorManagementController extends BaseController
 		$sensor['usn'] = $request->getParsedBody()['usn'];
 		$sensor_val = $this->SensorManagementModel->getSensorByusn($sensor);
 		
+		//결과 넣은 값
+		$num = count($sensor_val);
+		//echo($num);
+
 		$result['header'] = "Sensor List ";
 		$result['message'] = [];
-		$result['message']['ssn'] = $sensor_val['SSN'];
-		$result['message']['mac'] = $sensor_val['s_MAC'];
-		$result['message']['name'] = $sensor_val['s_name'];
-		$result['message']['state'] = $sensor_val['s_state'];
 		
+		for($i = 0; $i< $num; $i++){
+			$result['message'][$i]['ssn'] = $sensor_val[$i]['SSN'];
+			$result['message'][$i]['mac'] = $sensor_val[$i]['s_MAC'];
+			$result['message'][$i]['name'] = $sensor_val[$i]['s_name'];
+			$result['message'][$i]['state'] = $sensor_val[$i]['s_state'];
+		}
+
+		$result['result'] = 0;
+
 		return $response->withStatus(200)
 		->withHeader('Content-Type', 'application/json')
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
