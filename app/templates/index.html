@@ -90,70 +90,47 @@
 
   <!-- Google Chart-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript">
-    google.charts.load('current', { 'packages': ['line', 'corechart'] });
-    google.charts.setOnLoadCallback(drawChart);
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawStuff);
 
-    function drawChart() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('number', 'Day');
-      data.addColumn('number', 'PM2.5');
-      data.addColumn('number', 'PM10');
-      data.addColumn('number', 'CO');
-      data.addColumn('number', 'NO2');
-      data.addColumn('number', 'SO2');
-      data.addColumn('number', 'O3');
-      data.addColumn('number', 'temperature');
-      data.addColumn('number', 'AQI');
+    //밑에 배열부분에 AQI 값만 오른쪽에 넣고 나머지 요소들은 왼쪽에 다 집어넣으면 됨
+    function drawStuff() {
+        var data = new google.visualization.arrayToDataTable([
+          ['Air Elements', 'what', 'what'],
+          ['PM2.5', 4.8, 0],
+          ['O3', 40.8, 0],
+          ['CO', 30.8, 0],
+          ['NO2', 10, 0],
+          ['SO2', 37.8, 0],
+          ['temperature', 21.8, 0],
+          ['AQI', 0, 400.3]
+        ]);
 
-      data.addRows([
-        [1, 4.8, 40.8, 3.8, 1, 37.8, 30.8, 21.8, 400.3],
-        [2, 7.9, 21.5, 2.4, 1, 23.8, 25.8, 17.8, 390.8],
-        [3, 1.4, 52, 0.7, 1, 18.8, 22.8, 11.8, 240.6],
-        [4, 0.7, 37.8, 1.5, 1, 39.8, 19.8, 21.8, 110.9],
-        [5, 5.9, 24.6, 1.4, 1, 50.8, 28.8, 31.8, 280.8],
-        [6, 7.8, 29.6, 3.7, 1, 47.8, 34.8, 1.8, 307.8],
-        [7, 9.6, 18.3, 0.6, 1, 20.8, 30.8, 21.8, 106.8],
-        [8, 4.3, 38.2, 2.6, 1, 29.8, 12.8, 11.8, 270.8],
-        [9, 11.9, 26.9, 1.8, 1, 37.8, 27.8, 21.8, 304.8],
-        [10, 7.8, 18.9, 1.6, 1, 40.8, 21.8, 31.8, 260.9],
-        [11, 4.3, 37.9, 2.7, 1, 16.8, 28.8, 15.8, 180.3],
-        [12, 10.6, 26.4, 3.2, 1, 37.8, 34.8, 16.8, 30.8],
-        [13, 1.8, 10.3, 3.6, 1, 25.8, 25.8, 27.8, 140],
-        [14, 6.2, 19.2, 3.4, 1, 49.8, 16.8, 30.8, 380.2]
-      ]);
 
-      var options = {
-        chart: {
-          title: 'Real-time Air Quality data',
-          subtitle: 'per 1 days'
-        },
-        width: '100%',
-        height: 500,
-        series: {
-          // Gives each series an axis name that matches the Y-axis below.
-          0: { axis: 'temps' },
-          1: { axis: 'temps' },
-          2: { axis: 'temps' },
-          3: { axis: 'temps' },
-          4: { axis: 'temps' },
-          5: { axis: 'temps' },
-          6: { axis: 'temps' },
-          7: { axis: 'daylight' },
-        },
-        axes: {
-          // Adds labels to each axis; they don't have to match the axis names.
-          y: {
-            temps: { label: 'Temps (Celsius)' },
-            daylight: { label: 'Daylight' }
+        var options = {
+          width: 800,
+          chart: {
+            title: 'Real-time Air Quality',
+            subtitle: 'distance on the left, brightness on the right'
+          },
+          bars: 'horizontal', // Required for Material Bar Charts.
+          series: {
+            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+          },
+          axes: {
+            x: {
+              distance: {label: 'parsecs'}, // Bottom x-axis.
+              brightness: {side: 'top', label: 'apparent magnitude'} // Top x-axis.
+            }
           }
-        }
-      };
+        };
 
-      var chart = new google.charts.Line(document.getElementById('linechart_material'));
 
-      chart.draw(data, google.charts.Line.convertOptions(options));
-    }
+        var chart = new google.charts.Bar(document.getElementById('dual_x_div'));
+        chart.draw(data, options);
+    };
   </script>
 </head>
 
@@ -257,7 +234,7 @@
             <div id="map_canvas" style="position: relative;overflow: hidden;height: 500px;"></div>
             <!-- <div id = "map" style = "width:640px; height:480px;"></div> -->
       
-    <script async defer
+            <script async defer
               src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ_5s3S4uTqhtcBNUndDLKvmvcD23QKvY&callback=initMap">
               </script>
 
@@ -273,7 +250,7 @@
           </div>
           <div class="card-body">
             <!-- 차트 그림은 이거 복붙-->
-            <div id="linechart_material" style="width: 900px; height: 500px;"></div>
+            <div id="dual_x_div" style="width: 900px; height: 500px;"></div>
           </div>
         </div>
 
