@@ -3,3 +3,4 @@ log/*
 cache/*
 app/src/models/
 .vscode/
+.vscode/sftp.json
