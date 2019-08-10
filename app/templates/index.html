@@ -30,7 +30,7 @@
     function initMap() {
       var options = {
         //Center : QI(Calit2)
-        center: { lat: 32.8826247, lng: -117.2367698},        
+        center: { lat: 32.8826247, lng: -117.2367698 },
         zoom: 15,
         mapTypeId: google.maps.MapTypeId.TERRAIN
       }
@@ -45,95 +45,165 @@
         'url': "/getGPS",
         'dataType': "json",
         'success': function (data) {
-         createMarkers(data);
+          createMarkers(data);
         }
       });
-      
+
 
     };
+
 
 
     // Instantiate markers in the background and pass it back to the json object
     function createMarkers(markerJson) {
       var length = Object.keys(markerJson).length;
-      
-      for (let i = 0; i< length; i++) {
+
+      var contentString = [];
+      var infowindow = [];
+      var marker = [];
+
+      for (let i = 0; i < length; i++) {
         var sensormark = markerJson[i];
         sensormark = JSON.parse(`{${sensormark}}`);
-        var marker = new google.maps.Circle({
+
+        
+        contentString[i] = 
+        '<div id="content">' +
+          '<div id="showupAQI">' +
+          '</div>' +
+          '<h2 id="firstHeading" class="firstHeading">Measuered Data</h2>' +
+          '<div id="bodyContent">' +
+          '<p>' +
+          '<div>' +
+          '<table class = "mytable" width="100%" cellspacing="0">' +
+          '<thead>' +
+          '<tr>' +
+          '<th>원소</th>' +
+          '<th>측정값</th>' +
+          '<th>AQI</th>' +
+          '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+          '<tr>' +
+          '<th> O3 </th>' +
+          '<th>20</th>' +
+          '<th>10</th>' +
+          '</tr>' +
+          '<tr>' +
+          '<th> CO </th>' +
+          '<th>20</th>' +
+          '<th>10</th>' +
+          '</tr>' +
+          '<tr>' +
+          '<th> NO </th>' +
+          '<th>20</th>' +
+          '<th>10</th>' +
+          '</tr>' +
+          '<tr>' +
+          '<th> SO2 </th>' +
+          '<th>20</th>' +
+          '<th>10</th>' +
+          '</tr>' +
+          '<tr>' +
+          '<th> PM2.5 </th>' +
+          '<th>20</th>' +
+          '<th>10</th>' +
+          '</tr>' +
+          '<tr>' +
+          '<th> Temperature </th>' +
+          '<th>20</th>' +
+          '<th>10</th>' +
+          '</tr>' +
+          '</tbody>' +
+          '</table>' +
+          '</div>' +
+          '</p>' +
+          '</div>';
+
+
+        
+        
+        infowindow[i] = new google.maps.InfoWindow({
+          content: contentString[i]
+        });
+
+        marker[i] = new google.maps.Circle({
           strokeColor: '#FF0000',
           strokeOpacity: 0.8,
           strokeWeight: 2,
           fillColor: '#FF0000',
           fillOpacity: 0.35,
           map: map,
-          center: { lat: sensormark.location[0], lng: sensormark.location[1]},
-          radius: 100,
-          title: sensormark.name
+          position: { lat: sensormark.location[0], lng: sensormark.location[1] },
+          center: { lat: sensormark.location[0], lng: sensormark.location[1] },
+          radius: 100
+          //html: "<span class='pogo_name'>" + sensormark.name + "</a></span><br />" + sensormark.location[0] + "<br />"
         });
 
-        marker.infowindow = new google.maps.InfoWindow({
-          content: "<div><strong>" + sensormark.name +
-            "</strong></div><br />CO2: " + sensormark.s1 + "</strong></div>"
-        });
 
-        marker.addListener('click', function () {
-          activeInfoWindow && activeInfoWindow.close();
-          this.infowindow.open(map, this);
-          marker.infowindow.close();
-          activeInfoWindow = this.infowindow;
+      
+        marker[i].addListener('click', function () {
+          infowindow[i].open(map, marker[i]);        
         });
-
-        
       }
-      marker.setMap(map);
     }
   </script>
 
   <!-- Google Chart-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawStuff);
+  <script type="text/javascript">
+    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.setOnLoadCallback(drawStuff);
 
     //밑에 배열부분에 AQI 값만 오른쪽에 넣고 나머지 요소들은 왼쪽에 다 집어넣으면 됨
     function drawStuff() {
-        var data = new google.visualization.arrayToDataTable([
-          ['Air Elements', 'what', 'what'],
-          ['PM2.5', 4.8, 0],
-          ['O3', 40.8, 0],
-          ['CO', 30.8, 0],
-          ['NO2', 10, 0],
-          ['SO2', 37.8, 0],
-          ['temperature', 21.8, 0],
-          ['AQI', 0, 400.3]
-        ]);
+      var data = new google.visualization.arrayToDataTable([
+        ['Air Elements', 'what', 'what'],
+        ['PM2.5', 4.8, 0],
+        ['O3', 40.8, 0],
+        ['CO', 30.8, 0],
+        ['NO2', 10, 0],
+        ['SO2', 37.8, 0],
+        ['temperature', 21.8, 0],
+        ['AQI', 0, 400.3]
+      ]);
 
 
-        var options = {
-          width: 800,
-          chart: {
-            title: 'Real-time Air Quality',
-            subtitle: 'distance on the left, brightness on the right'
-          },
-          bars: 'horizontal', // Required for Material Bar Charts.
-          series: {
-            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
-            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
-          },
-          axes: {
-            x: {
-              distance: {label: 'parsecs'}, // Bottom x-axis.
-              brightness: {side: 'top', label: 'apparent magnitude'} // Top x-axis.
-            }
+      var options = {
+        width: 800,
+        chart: {
+          title: 'Real-time Air Quality',
+          subtitle: 'distance on the left, brightness on the right'
+        },
+        bars: 'horizontal', // Required for Material Bar Charts.
+        series: {
+          0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+          1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+        },
+        axes: {
+          x: {
+            distance: { label: 'parsecs' }, // Bottom x-axis.
+            brightness: { side: 'top', label: 'apparent magnitude' } // Top x-axis.
           }
-        };
+        }
+      };
 
 
-        var chart = new google.charts.Bar(document.getElementById('dual_x_div'));
-        chart.draw(data, options);
+      var chart = new google.charts.Bar(document.getElementById('dual_x_div'));
+      chart.draw(data, options);
     };
   </script>
+  <!-- 팝업 테이블 css -->
+  <style>
+    .mytable {
+      border-collapse: collapse;
+    }
+
+    .mytable th,
+    .mytable td {
+      border: 1px solid black;
+    }
+  </style>
 </head>
 
 <body id="page-top">
@@ -235,7 +305,7 @@
           <div class="card-body">
             <div id="map_canvas" style="position: relative;overflow: hidden;height: 500px;"></div>
             <!-- <div id = "map" style = "width:640px; height:480px;"></div> -->
-      
+
             <script async defer
               src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ_5s3S4uTqhtcBNUndDLKvmvcD23QKvY&language=en&callback=initMap">
               </script>
@@ -269,7 +339,7 @@
                   <tr>
                     <th>MAC</th>
                     <th>Sensor Name</th>
-                    <th>State</th>                   
+                    <th>State</th>
                   </tr>
                 </thead>
                 <tbody id="senosr_list">
@@ -278,26 +348,26 @@
                     var usn = sessionStorage.usn;
                     //send json
                     $.ajax({
-                    method: "POST",
-                    url: "/sensorList",
-                    'dataType': "json",
-                    data: {
-                      "usn": usn          
-                    }
-                    }).done(function( msg ) {
+                      method: "POST",
+                      url: "/sensorList",
+                      'dataType': "json",
+                      data: {
+                        "usn": usn
+                      }
+                    }).done(function (msg) {
                       var lenght = msg.message.length;
                       var temp = JSON.stringify(msg.message);
-                      
-                      for(var i = 0; i<lenght; i++){
-                        var tr = document.createElement('tr');                        
-                          
-                        if(JSON.parse(temp)[i].state == 1)
-                          var text = '<th>'+JSON.parse(temp)[i].mac+'</th>'+'<th>'+JSON.parse(temp)[i].name+'</th>'+'<th>'+"Active"+'</th>';
+
+                      for (var i = 0; i < lenght; i++) {
+                        var tr = document.createElement('tr');
+
+                        if (JSON.parse(temp)[i].state == 1)
+                          var text = '<th>' + JSON.parse(temp)[i].mac + '</th>' + '<th>' + JSON.parse(temp)[i].name + '</th>' + '<th>' + "Active" + '</th>';
                         else
-                          var text = '<th>'+JSON.parse(temp)[i].mac+'</th>'+'<th>'+JSON.parse(temp)[i].name+'</th>'+'<th>'+"NotActive"+'</th>';
-                        
+                          var text = '<th>' + JSON.parse(temp)[i].mac + '</th>' + '<th>' + JSON.parse(temp)[i].name + '</th>' + '<th>' + "NotActive" + '</th>';
+
                         tr.innerHTML = text;
-                        document.getElementById('senosr_list').appendChild(tr);                    
+                        document.getElementById('senosr_list').appendChild(tr);
                       }
                     });
                   </script>
