@@ -121,7 +121,7 @@ final class SensorManagementModel extends BaseModel
 		$sql = "INSERT INTO Air_Sensor_value (a_ssn, a_PM2_5, a_O3, a_CO, a_NO2, a_SO2, a_Temperture, a_latitude, a_longitude, a_time, a_usn, AQ_PM2_5, AQ_O3, AQ_CO, AQ_NO2, AQ_SO2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$sth = $this->db->prepare($sql);
 		
-		if($sth->execute(array($sensor['ssn'], $sensor['pm2_5'], $sensor['o3'], $sensor['co'], $sensor['no2'], $sensor['so2'], $sensor['temperture'], $sensor['latitude'], $sensor['longitude'], $sensor['time'], $sensor['usn'], $sensor['aq_pm2_5'], $sensor['ap_o3'], $sensor['ap_co'], $sensor['ap_no2'],$sensor['ap_so2']))){
+		if($sth->execute(array($sensor['ssn'], $sensor['pm2_5'], $sensor['o3'], $sensor['co'], $sensor['no2'], $sensor['so2'], $sensor['temperture'], $sensor['latitude'], $sensor['longitude'], $sensor['time'], $sensor['usn'], $sensor['aq_pm2_5'], $sensor['aq_o3'], $sensor['aq_co'], $sensor['aq_no2'],$sensor['aq_so2']))){
 			return TRUE;
 		}else{
 			return FALSE;

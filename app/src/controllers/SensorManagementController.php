@@ -152,11 +152,11 @@ final class SensorManagementController extends BaseController
 		$sensor['latitude'] = $request->getParsedBody()['latitude'];
 		$sensor['longitude'] = $request->getParsedBody()['longitude'];
 		$sensor['time'] = $request->getParsedBody()['time'];
-		$sensor['ap_pm2_5'] = $request->getParsedBody()['aq_pm2_5'];
-		$sensor['ap_o3'] = $request->getParsedBody()['ap_o3'];
-		$sensor['ap_co'] = $request->getParsedBody()['ap_co'];
-		$sensor['ap_no2'] = $request->getParsedBody()['ap_no2'];
-		$sensor['ap_so2'] = $request->getParsedBody()['ap_so2'];
+		$sensor['aq_pm2_5'] = $request->getParsedBody()['aq_pm2_5'];
+		$sensor['aq_o3'] = $request->getParsedBody()['aq_o3'];
+		$sensor['aq_co'] = $request->getParsedBody()['aq_co'];
+		$sensor['aq_no2'] = $request->getParsedBody()['aq_no2'];
+		$sensor['aq_so2'] = $request->getParsedBody()['aq_so2'];
 		
 		if($this->SensorManagementModel->insertAirdata($sensor)){
 			$result['header'] = "success";
@@ -225,6 +225,11 @@ final class SensorManagementController extends BaseController
 				$result['message']['latitude'] = $data['a_latitude'];
 				$result['message']['longitude'] = $data['a_longitude'];
 				$result['message']['time'] = $data['a_time'];
+				$result['message']['aq_pm2_5'] = $data['AQ_PM2_5'];
+				$result['message']['aq_o3'] = $data['AQ_O3'];
+				$result['message']['aq_co'] = $data['AQ_CO'];
+				$result['message']['aq_no2'] = $data['AQ_NO2'];
+				$result['message']['aq_so2'] = $data['AQ_SO2'];
 
 				$result['result'] = "0";
 			}else{
@@ -273,6 +278,11 @@ final class SensorManagementController extends BaseController
 					$result['message'][$i]['latitude'] = $data[$i]['a_latitude'];
 					$result['message'][$i]['longitude'] = $data[$i]['a_longitude'];
 					$result['message'][$i]['time'] = $data[$i]['a_time'];
+					$result['message'][$i]['aq_pm2_5'] = $data[$i]['AQ_PM2_5'];
+					$result['message'][$i]['aq_o3'] = $data[$i]['AQ_O3'];
+					$result['message'][$i]['aq_co'] = $data[$i]['AQ_CO'];
+					$result['message'][$i]['aq_no2'] = $data[$i]['AQ_NO2'];
+					$result['message'][$i]['aq_so2'] = $data[$i]['AQ_SO2'];
 				}
 				$result['result'] = "0";
 			}else{

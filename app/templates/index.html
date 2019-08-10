@@ -29,6 +29,7 @@
 
     function initMap() {
       var options = {
+        //Center : QI(Calit2)
         center: { lat: 32.8826247, lng: -117.2367698},        
         zoom: 15,
         mapTypeId: google.maps.MapTypeId.TERRAIN
@@ -44,8 +45,6 @@
         'url': "/getGPS",
         'dataType': "json",
         'success': function (data) {
-         //json = data;
-         //console.log(data); 
          createMarkers(data);
         }
       });
@@ -59,8 +58,8 @@
       var length = Object.keys(markerJson).length;
       
       for (let i = 0; i< length; i++) {
-        var shop = markerJson[i];
-        shop = JSON.parse(`{${shop}}`);
+        var sensormark = markerJson[i];
+        sensormark = JSON.parse(`{${sensormark}}`);
         var marker = new google.maps.Circle({
           strokeColor: '#FF0000',
           strokeOpacity: 0.8,
@@ -68,14 +67,14 @@
           fillColor: '#FF0000',
           fillOpacity: 0.35,
           map: map,
-          center: { lat: shop.location[0], lng: shop.location[1]},
-          radius: 100
-          //title: shop.name
+          center: { lat: sensormark.location[0], lng: sensormark.location[1]},
+          radius: 100,
+          title: sensormark.name
         });
 
         marker.infowindow = new google.maps.InfoWindow({
-          content: "<div><strong>" + shop.name +
-            "</strong></div><br />CO2: " + shop.s1 + "</strong></div>"
+          content: "<div><strong>" + sensormark.name +
+            "</strong></div><br />CO2: " + sensormark.s1 + "</strong></div>"
         });
 
         marker.addListener('click', function () {
@@ -84,7 +83,10 @@
           marker.infowindow.close();
           activeInfoWindow = this.infowindow;
         });
+
+        
       }
+      marker.setMap(map);
     }
   </script>
 
@@ -235,7 +237,7 @@
             <!-- <div id = "map" style = "width:640px; height:480px;"></div> -->
       
             <script async defer
-              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ_5s3S4uTqhtcBNUndDLKvmvcD23QKvY&callback=initMap">
+              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ_5s3S4uTqhtcBNUndDLKvmvcD23QKvY&language=en&callback=initMap">
               </script>
 
             <div class='myLinkContainer'></div>
@@ -265,60 +267,42 @@
               <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                   <tr>
-                    <th>SSN</th>
+                    <th>MAC</th>
                     <th>Sensor Name</th>
-                    <th>State</th>
-                    <th>Check</th>
+                    <th>State</th>                   
                   </tr>
                 </thead>
-                <tfoot>
-                  <tr>
-                    <th>SSN</th>
-                    <th>Sensor Name</th>
-                    <th>State</th>
-                    <th>Check</th>
-                  </tr>
-                </tfoot>
-                <tbody>
-                  <tr>
-                    <td>Tiger Nixon</td>
-                    <td>Sensor6</td>
-                    <td>Activate</td>
-                    <td><input type="checkbox" name="chk6"></td>
-                  </tr>
-                  <tr>
-                    <td>Garrett Winters</td>
-                    <td>Sensor5</td>
-                    <td>Deactivate</td>
-                    <td><input type="checkbox" name="chk5"></td>
-                  </tr>
-                  <tr>
-                    <td>Ashton Cox</td>
-                    <td>Sensor4</td>
-                    <td>Activate</td>
-                    <td><input type="checkbox" name="chk4"></td>
-                  </tr>
-                  <tr>
-                    <td>Cedric Kelly</td>
-                    <td>Sensor3</td>
-                    <td>Deactivate</td>
-                    <td><input type="checkbox" name="chk3"></td>
-                  </tr>
-                  <tr>
-                    <td>Airi Satou</td>
-                    <td>Sensor2</td>
-                    <td>Activate</td>
-                    <td><input type="checkbox" name="chk2"></td>
-                  </tr>
-                  <tr>
-                    <td>Brielle Williamson</td>
-                    <td>Sensor1</td>
-                    <td>Deactivate</td>
-                    <td><input type="checkbox" name="chk1"></td>
-                  </tr>
+                <tbody id="senosr_list">
+                  <!-- 센서 값 반복문-->
+                  <script>
+                    var usn = sessionStorage.usn;
+                    //send json
+                    $.ajax({
+                    method: "POST",
+                    url: "/sensorList",
+                    'dataType': "json",
+                    data: {
+                      "usn": usn          
+                    }
+                    }).done(function( msg ) {
+                      var lenght = msg.message.length;
+                      var temp = JSON.stringify(msg.message);
+                      
+                      for(var i = 0; i<lenght; i++){
+                        var tr = document.createElement('tr');                        
+                          
+                        if(JSON.parse(temp)[i].state == 1)
+                          var text = '<th>'+JSON.parse(temp)[i].mac+'</th>'+'<th>'+JSON.parse(temp)[i].name+'</th>'+'<th>'+"Active"+'</th>';
+                        else
+                          var text = '<th>'+JSON.parse(temp)[i].mac+'</th>'+'<th>'+JSON.parse(temp)[i].name+'</th>'+'<th>'+"NotActive"+'</th>';
+                        
+                        tr.innerHTML = text;
+                        document.getElementById('senosr_list').appendChild(tr);                    
+                      }
+                    });
+                  </script>
                 </tbody>
               </table>
-              <button class="btn btn-success" type="button" data-dismiss="modal">Delete</button>
             </div>
           </div>
           <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
