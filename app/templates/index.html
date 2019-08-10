@@ -33,7 +33,8 @@
         center: { lat: 32.8826247, lng: -117.2367698 },
         zoom: 15,
         mapTypeId: google.maps.MapTypeId.TERRAIN
-      }
+      }     
+
       map = new google.maps.Map(document.getElementById("map_canvas"), options);
 
       // Create markers into DOM
@@ -47,12 +48,8 @@
         'success': function (data) {
           createMarkers(data);
         }
-      });
-
-
+      });      
     };
-
-
 
     // Instantiate markers in the background and pass it back to the json object
     function createMarkers(markerJson) {
@@ -143,8 +140,22 @@
 
       
         marker[i].addListener('click', function () {
+          //나머지 색상 원래대로 - 이전 창 자동으로 닫는거 안됨...
+          for(var k = 0; k< length; k++){              
+              marker[k].setOptions({
+              strokeColor: '#FF0000',
+              fillColor: '#FF0000',
+            });
+          }
+
+          //열고
           infowindow[i].open(map, marker[i]);        
-        });
+          //색상 바꾸고
+          marker[i].setOptions({
+            strokeColor: '#000000',
+            fillColor: '#000000',
+          });
+        });   
       }
     }
   </script>
@@ -304,8 +315,6 @@
           </div>
           <div class="card-body">
             <div id="map_canvas" style="position: relative;overflow: hidden;height: 500px;"></div>
-            <!-- <div id = "map" style = "width:640px; height:480px;"></div> -->
-
             <script async defer
               src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ_5s3S4uTqhtcBNUndDLKvmvcD23QKvY&language=en&callback=initMap">
               </script>
