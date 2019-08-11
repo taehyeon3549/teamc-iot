@@ -236,9 +236,41 @@ final class SensorManagementModel extends BaseModel
 
 		//print_r(array($val['date'], $val['tomorrow'], $val['lati'], $val['longi']));
 
+		//print_r($result);
 		
 		return $result;
 	}
+
+
+	//Get AQI
+	public function test($val){	
+
+		// 들어가는 값 오늘 날짜 , 어제 날짜, 위도, 경도
+
+		// $sql = "SELECT *, max(AQ_PM2_5) as AQ_PM2_5, MAX(AQ_O3) as AQ_O3, MAX(AQ_CO) as AQ_CO, MAX(AQ_NO2) as AQ_NO2, MAX(AQ_SO2) as AQ_SO2
+		// 		FROM Air_Sensor_value
+		// 		where a_time >= ? and a_time < ? and a_latitude like ? and a_longitude like ?
+		// 		group by a_latitude, a_longitude;
+		// 		";
+		
+		$sql = " SELECT *, max(AQ_PM2_5) as AQ_PM2_5, MAX(AQ_O3) as AQ_O3, MAX(AQ_CO) as AQ_CO, MAX(AQ_NO2) as AQ_NO2, MAX(AQ_SO2) as AQ_SO2
+        from Air_Sensor_value";
+		
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute();
+
+		$result = $sth->fetchAll();
+
+		//print_r(array($val['date'], $val['tomorrow'], $val['lati'], $val['longi']));
+
+
+		
+		return $result;
+	}
+
+	
+
 
 
 }

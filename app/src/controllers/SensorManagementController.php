@@ -361,6 +361,13 @@ final class SensorManagementController extends BaseController
 				
 				if($value != null){
 					$r_ssn = $value['a_ssn'];
+					$a_PM_2_5 = $value['a_PM2_5'];
+					$a_O3 = $value['a_O3'];
+					$a_CO = $value['a_CO'];
+					$a_NO2 = $value['a_NO2'];
+					$a_SO2 = $value['a_SO2'];
+					$a_Temperature = $value['a_Temperture'];
+					
 					$AQ_PM2_5 = $value['AQ_PM2_5'];
 					$AQ_O3 = $value['AQ_O3'];
 					$AQ_CO= $value['AQ_CO'];
@@ -368,6 +375,17 @@ final class SensorManagementController extends BaseController
 					$AQ_SO2= $value['AQ_SO2'];
 
 					$result[$i]['r_ssn'] = $r_ssn;
+					$result[$i]['PM2_5'] = $a_PM_2_5;
+					$result[$i]['O3'] = $a_O3;
+					$result[$i]['CO'] = $a_CO;
+					$result[$i]['NO2'] = $a_NO2;
+					$result[$i]['SO2'] = $a_SO2;
+					$result[$i]['Temperature'] = $a_Temperature;
+					
+					
+					
+					
+					
 					$result[$i]['latitude'] = $value['a_latitude'];
 					$result[$i]['longitude'] = $value['a_longitude'];
 					$result[$i]['AQ_PM2_5'] = $AQ_PM2_5;
@@ -425,5 +443,138 @@ final class SensorManagementController extends BaseController
 		return $response->withStatus(200)
 		->withHeader('Content-Type', 'application/json')
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
+
+	//getAQI
+	public function getAQI__(Request $request, Response $response, $args)
+	{
+		//usn 을 이용해서 센서의 갯수 와 정보를 가지고 오고 를 가지고 오고
+		$usn = $request->getParsedBody()['usn'];		//입력
+		$val['date'] =$request->getParsedBody()['date'];	//입력
+		$val['tomorrow'] = $request->getParsedBody()['tomorrow'];	//입력	
+
+		$result1 = $this->SensorManagementModel->getSensorByusn($usn);
+		$sensor_num = count($result1);
+
+		//$sensor_loc;
+
+		//각 센서 의 usn을 이용하여 위치값을 가져오고
+		for($i = 0; $i< $sensor_num; $i++){
+			$sensor_loc = $this->SensorManagementModel->location($result1[$i]['SSN']);
+
+			if($sensor_loc != null){
+				$val['lati'] = $sensor_loc['a_latitude'];	//입력
+				$val['longi'] = $sensor_loc['a_longitude'];	//입력
+
+				//echo("AQI 가져옴");
+				//print_r($val);		//입력값 정상
+				$value = $this->SensorManagementModel->getAQI($val)[0];
+
+				
+				if($value != null){
+					$r_ssn = $value['a_ssn'];
+					$a_PM_2_5 = $value['a_PM2_5'];
+					$a_O3 = $value['a_O3'];
+					$a_CO = $value['a_CO'];
+					$a_NO2 = $value['a_NO2'];
+					$a_SO2 = $value['a_SO2'];
+					$a_Temperature = $value['a_Temperture'];
+					
+					$AQ_PM2_5 = $value['AQ_PM2_5'];
+					$AQ_O3 = $value['AQ_O3'];
+					$AQ_CO= $value['AQ_CO'];
+					$AQ_NO2= $value['AQ_NO2'];
+					$AQ_SO2= $value['AQ_SO2'];
+
+					$result['message'][$i]['r_ssn'] = $r_ssn;
+					$result['message'][$i]['PM2_5'] = $a_PM_2_5;
+					$result['message'][$i]['O3'] = $a_O3;
+					$result['message'][$i]['CO'] = $a_CO;
+					$result['message'][$i]['NO2'] = $a_NO2;
+					$result['message'][$i]['SO2'] = $a_SO2;
+					$result['message'][$i]['Temperature'] = $a_Temperature;
+					
+					
+					
+					
+					
+					$result['message'][$i]['latitude'] = $value['a_latitude'];
+					$result['message'][$i]['longitude'] = $value['a_longitude'];
+					$result['message'][$i]['AQ_PM2_5'] = $AQ_PM2_5;
+					$result['message'][$i]['AQ_CO'] = $AQ_CO;
+					$result['message'][$i]['AQ_O3'] = $AQ_O3;
+					$result['message'][$i]['AQ_NO2'] = $AQ_NO2;
+					$result['message'][$i]['AQ_SO2'] = $AQ_SO2;
+
+					$result['result'][$i] = "0";
+					//print_r($result[0]['latitude']);
+
+				}else{
+					$result['message'] = "fail";
+					$result['result'] = "1";
+				}
+			}				
+			}			
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+		// return $request->getParsedBody()['usn'];
+	}
+
+
+	//getAQI
+	public function test(Request $request, Response $response, $args)
+	{
+		
+				$value = $this->SensorManagementModel->test($val)[0];
+
+				
+				if($value != null){
+					$r_ssn = $value['a_ssn'];
+					$a_PM_2_5 = $value['a_PM2_5'];
+					$a_O3 = $value['a_O3'];
+					$a_CO = $value['a_CO'];
+					$a_NO2 = $value['a_NO2'];
+					$a_SO2 = $value['a_SO2'];
+					$a_Temperature = $value['a_Temperture'];
+					
+					$AQ_PM2_5 = $value['AQ_PM2_5'];
+					$AQ_O3 = $value['AQ_O3'];
+					$AQ_CO= $value['AQ_CO'];
+					$AQ_NO2= $value['AQ_NO2'];
+					$AQ_SO2= $value['AQ_SO2'];
+
+					$result['r_ssn'] = $r_ssn;
+					$result['PM2_5'] = $a_PM_2_5;
+					$result['O3'] = $a_O3;
+					$result['CO'] = $a_CO;
+					$result['NO2'] = $a_NO2;
+					$result['SO2'] = $a_SO2;
+					$result['Temperature'] = $a_Temperature;
+					
+					
+					
+					
+					
+					$result['latitude'] = $value['a_latitude'];
+					$result['longitude'] = $value['a_longitude'];
+					$result['AQ_PM2_5'] = $AQ_PM2_5;
+					$result['AQ_CO'] = $AQ_CO;
+					$result['AQ_O3'] = $AQ_O3;
+					$result['AQ_NO2'] = $AQ_NO2;
+					$result['AQ_SO2'] = $AQ_SO2;
+
+				
+
+				}else{
+					$result['message'] = "fail";
+					$result['result'] = "1";
+				}
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+		// return $request->getParsedBody()['usn'];
 	}
 }

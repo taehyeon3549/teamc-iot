@@ -159,6 +159,13 @@ $app->get('/getGPS', 'App\Controller\SensorManagementController:getGPS')
 $app->post('/location', 'App\Controller\SensorManagementController:location')
 ->setName('location');
 
+//Get value
+$app->post('/getAQI__', 'App\Controller\SensorManagementController:getAQI__')
+->setName('getAQI__');
+
+//Get value
+$app->post('/test', 'App\Controller\SensorManagementController:test')
+->setName('test');
 
 
 /****************************************/
