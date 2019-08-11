@@ -31,7 +31,7 @@
             tuple.push(payload[idx].no2);
             store.push(tuple);
           };
-          console.log(store);
+          //console.log(store);
           var data = new google.visualization.DataTable(data);
 
           data.addColumn('string', 'time');
@@ -54,16 +54,15 @@
             series: {
               // Gives each series an axis name that matches the Y-axis below.
               0: { axis: 'temps' },
-              1: { axis: 'temps' },
+              1: { axis: 'daylight' },
               2: { axis: 'temps' },
-              3: { axis: 'temps' },
-              4: { axis: 'daylight' },
-              5: { axis: 'daylight' },
+              3: { axis: 'daylight' },
+              4: { axis: 'temps' },
             },
             axes: {
               y: {
-                temps: { label: 'Temps (Celsius)' },
-                daylight: { label: 'Daylight' }
+                temps: { label: 'PM2.5, CO, NO2' },
+                daylight: { label: 'O3' }
               }
             }
           };
