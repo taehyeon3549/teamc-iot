@@ -17,6 +17,30 @@
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
 
+  <script>
+      $(document).ready(function(){          
+          $("#inputemail").val(email);  
+          $("#inputPassword").val(password);
+      });
+    </script>
+  <script>
+    var usn = sessionStorage.getItem('usn');
+    var password = sessionStorage.getItem('password');
+
+    var url = "/userinfo/" + usn;
+
+    $.ajax({
+      method: "GET",
+      //url: "/userinfo/"+usn,
+      url: url,
+      data: {
+        }
+    }).done(function (msg) {
+      console.log(msg);
+      email = msg.email;
+      password = msg.password;
+    });
+  </script>
 </head>
 
 <body id="page-top">
@@ -98,7 +122,7 @@
         <form>
           <div class="form-group">
             <div class="form-label-group">
-              <input type="email" id="inputEmail" class="form-control" placeholder="Enter email address" required="required" autofocus="autofocus">
+              <input type="text" id="inputEmail" class="form-control" placeholder="Enter email address" required="required" autofocus="autofocus">
               <label for="inputEmail">Enter your password</label>
             </div>
           </div>
