@@ -256,6 +256,9 @@ final class SensorManagementController extends BaseController
 
 		$sensor['ssn'] = $request->getParsedBody()['ssn'];
 		$sensor['sensor_name'] = $request->getParsedBody()['sensor_name'];
+		$sensor['yesterday'] = $request->getParsedBody()['yesterday'];
+		$sensor['today'] = $request->getParsedBody()['today'];
+		
 
 		$data = $this->SensorManagementModel->showHistodata($sensor);
 		$num = count($data);
@@ -310,6 +313,96 @@ final class SensorManagementController extends BaseController
 	{
 		$data = $this->SensorManagementModel->getGPS();
 		$num = count($data);
+		$result = [];	
+		
+		//센서 이름 : {...}, 센서 위치 : {위도,경도}
+		if($num > 0){		
+			for ($i=0; $i < $num; $i++) { 
+				$name = $data[$i]['p_ssn'];
+				$sensor_name = $this->SensorManagementModel->getSensorByssn($name)['s_name'];
+				array_push($result, '"name" :"'.$sensor_name.'", "location" :['.$data[$i]["p_latitude"].','.$data[$i]["p_longitude"].']'); 			  
+			}
+		}else{
+			$result['header'] = "fail";
+			$result['message'] = "1";	
+		}
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
+
+	///////////////시작 /////////////////////
+	//getGPS	
+	public function location(Request $request, Response $response, $args)
+	{
+		//usn 을 이용해서 센서의 갯수 와 정보를 가지고 오고 를 가지고 오고
+		$usn['usn'] = $request->getParsedBody()['usn'];		//입력
+		$val['date'] =$request->getParsedBody()['date'];	//입력
+		$val['tomorrow'] = $request->getParsedBody()['tomorrow'];	//입력	
+
+		$result1 = $this->SensorManagementModel->getSensorByusn($usn);
+		$sensor_num = count($result1);
+
+		//$sensor_loc;
+
+		//각 센서 의 usn을 이용하여 위치값을 가져오고
+		for($i = 0; $i< $sensor_num; $i++){
+			$sensor_loc = $this->SensorManagementModel->location($result1[$i]['SSN']);
+
+			if($sensor_loc != null){
+				$val['lati'] = $sensor_loc['a_latitude'];	//입력
+				$val['longi'] = $sensor_loc['a_longitude'];	//입력
+
+				//echo("AQI 가져옴");
+				//print_r($val);		//입력값 정상
+				$value = $this->SensorManagementModel->getAQI($val)[0];
+
+				if($value != null){
+					$r_ssn = $value['a_ssn'];
+					$AQ_PM2_5 = $value['AQ_PM2_5'];
+					$AQ_O3 = $value['AQ_O3'];
+					$AQ_CO= $value['AQ_CO'];
+					$AQ_NO2= $value['AQ_NO2'];
+					$AQ_SO2= $value['AQ_SO2'];
+
+					$result[$i]['r_ssn'] = $r_ssn;
+					$result[$i]['latitude'] = $value['a_latitude'];
+					$result[$i]['longitude'] = $value['a_longitude'];
+					$result[$i]['AQ_PM2_5'] = $AQ_PM2_5;
+					$result[$i]['AQ_CO'] = $AQ_CO;
+					$result[$i]['AQ_O3'] = $AQ_O3;
+					$result[$i]['AQ_NO2'] = $AQ_NO2;
+					$result[$i]['AQ_SO2'] = $AQ_SO2;
+				}else{
+					$result['message'] = "fail";
+					$result['result'] = "1";
+				}
+			}				
+			}			
+
+		return $response->withStatus(200)
+		->withHeader('Content-Type', 'application/json')
+		->write(json_encode($result, JSON_NUMERIC_CHECK));
+	}
+
+	//getAQI
+	public function getAQI(Request $request, Response $response, $args)
+	{
+		$val = [];
+
+		$want = $request->getParsedBody()['date'];
+
+		$val['date'] = date('yyyy-mm-dd', $want);
+		$val['be_date'] = date('yyyy-mm-dd', $want) - 1;
+		echo($val['date']);
+		echo($val['be_date']);
+
+		$val['lati'] = $request->getParsedBody()['latitude'];
+		$val['longi'] = $request->getParsedBody()['longitude'];
+
+		//AQI 최대값
+		$data = $this->SensorManagementModel->getAQI($val);
 		$result = [];	
 		
 		//센서 이름 : {...}, 센서 위치 : {위도,경도}

@@ -91,7 +91,8 @@ final class SensorManagementModel extends BaseModel
 		$sql = "SELECT * FROM Sensor WHERE s_user = ? ";
 		$sth = $this->db->prepare($sql);
 		$sth->execute(array($sensor['usn']));		
-		$result = $sth->fetchAll();		
+		$result = $sth->fetchAll();	
+		
 		return $result;
 	}
 
@@ -164,13 +165,13 @@ final class SensorManagementModel extends BaseModel
 		$str = explode('_', $sensor['sensor_name']);
 
 		if($str[0] == "Air"){
-			$sql = "SELECT * FROM Air_Sensor_value WHERE a_ssn = ? ORDER BY a_no DESC";
+			$sql = "SELECT * FROM Air_Sensor_value WHERE a_ssn = ? and a_time >= ? and a_time < ? ORDER BY a_no DESC";
 		}else{
-			$sql = "SELECT * FROM Polar_Sensor_value WHERE p_ssn = ? ORDER BY p_no DESC";
+			$sql = "SELECT * FROM Polar_Sensor_value WHERE p_ssn = ? and p_time >= ? and p_time < ? ORDER BY p_no DESC";
 		}
 		$sth = $this->db->prepare($sql);
 
-		$sth->execute(array($sensor['ssn']));
+		$sth->execute(array($sensor['ssn'], $sensor['yesterday'], $sensor['today']));
 
 		$result = $sth->fetchAll();
 		
@@ -188,6 +189,55 @@ final class SensorManagementModel extends BaseModel
 
 		$result = $sth->fetchAll();
 		
+		return $result;
+	}
+
+
+	////////시작///////////////
+
+	public function location($ssn){	
+
+		$sql = "SELECT a_latitude, a_longitude, a_time, a_ssn
+				FROM Air_Sensor_value
+				WHERE a_ssn = ?
+				GROUP BY a_latitude, a_longitude
+				ORDER BY a_time DESC
+				LIMIT 1;
+				";
+		
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute(array($ssn));
+
+		$result = $sth->fetchAll();
+		
+		return $result[0];
+	}
+
+	//Get AQI
+	public function getAQI($val){	
+
+		// 들어가는 값 오늘 날짜 , 어제 날짜, 위도, 경도
+
+		// $sql = "SELECT *, max(AQ_PM2_5) as AQ_PM2_5, MAX(AQ_O3) as AQ_O3, MAX(AQ_CO) as AQ_CO, MAX(AQ_NO2) as AQ_NO2, MAX(AQ_SO2) as AQ_SO2
+		// 		FROM Air_Sensor_value
+		// 		where a_time >= ? and a_time < ? and a_latitude like ? and a_longitude like ?
+		// 		group by a_latitude, a_longitude;
+		// 		";
+		
+		$sql = "SELECT *, max(AQ_PM2_5) as AQ_PM2_5, MAX(AQ_O3) as AQ_O3, MAX(AQ_CO) as AQ_CO, MAX(AQ_NO2) as AQ_NO2, MAX(AQ_SO2) as AQ_SO2
+		FROM Air_Sensor_value where a_time >= ? and a_time < ? and a_latitude like ? and a_longitude like ? group by a_latitude, a_longitude;";
+		
+		$sth = $this->db->prepare($sql);
+
+		$sth->execute(array($val['date'], $val['tomorrow'], $val['lati'], $val['longi']));
+
+		$result = $sth->fetchAll();
+
+		//print_r(array($val['date'], $val['tomorrow'], $val['lati'], $val['longi']));
+
+		//print_r($result);
+
 		return $result;
 	}
 
