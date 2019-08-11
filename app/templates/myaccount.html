@@ -24,24 +24,42 @@
     $(document).ready(function(){      
         $("#inputName").val(name);      
         $("#inputemail").val(email);  
-        
+        $("#inputgender").val(gender); 
+        $("#inputbirth").val(birth); 
+        $("#inputemergency").val(emergency); 
+        $("#inputPassword").val(password);
+        $("#confirmPassword").val(confirmPassword);
     });
   </script>
   <script>
     var usn = sessionStorage.getItem('usn');
 
+    var url = "/userinfo/" + usn;
+    var email;
+    var name;
+    var gender;
+    var birth;
+    var emergency;
+    var password;
+    var confirmPassword;
+
+
     //send json
     $.ajax({
-      method: "POST",
-      url: "/userinfo/"+usn,
+      method: "GET",
+      //url: "/userinfo/"+usn,
+      url: url,
       data: {
         }
     }).done(function (msg) {
-      var email = msg.email;
-      var name = msg.name;
-      var gender = msg.gender;
-      var birth = msg.birth;
-      var emergency = msg.emergency;
+      console.log(msg);
+      email = msg.email;
+      name = msg.name;
+      gender = msg.gender;
+      birth = msg.birth;
+      emergency = msg.emergency;
+      password = msg.password;
+      confirmpassword = msg.confirmpassword;
     });         
   </script>
 </head>
@@ -167,16 +185,16 @@
                       </div>
                       <div class="form-group">
                         <label for="exampleInputEmail1">Birth</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Birth">
+                        <input type="text" class="form-control" id="inputbirth" placeholder="Birth">
                       </div>
                       <div class="form-group">
                         <label for="emergencycall">Emergency Call</label>
-                        <input type="phone" name="emergencycall" id="emergencycall" class="form-control"
+                        <input type="phone" name="emergencycall" id="inputemergency" class="form-control"
                           placeholder="Emergency Call">
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Gender</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Gender">
+                        <input type="text" class="form-control" id="inputgender" placeholder="Gender">
                       </div>
                       <button type="submit" class="btn btn-success">Save</button>
                     </form>
@@ -245,29 +263,6 @@
         </div>
       </div>
     </div>
-
-
-    <!-- My Account-->
-    <!-- <div class="modal fade" id="MyaccountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="accountModalLabel">My Account</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Your Email: teamciot2019@gmail.com<br>Your Name: Jane</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Change</a>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
-
-
 
 
 
