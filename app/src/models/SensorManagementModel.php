@@ -87,10 +87,10 @@ final class SensorManagementModel extends BaseModel
 	}
 
 	//Get sensor list by usn
-	public function getSensorByusn($sensor){   
+	public function getSensorByusn($usn){   
 		$sql = "SELECT * FROM Sensor WHERE s_user = ? ";
 		$sth = $this->db->prepare($sql);
-		$sth->execute(array($sensor['usn']));		
+		$sth->execute(array($usn));		
 		$result = $sth->fetchAll();	
 		
 		return $result;
@@ -236,8 +236,7 @@ final class SensorManagementModel extends BaseModel
 
 		//print_r(array($val['date'], $val['tomorrow'], $val['lati'], $val['longi']));
 
-		//print_r($result);
-
+		
 		return $result;
 	}
 

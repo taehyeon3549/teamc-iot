@@ -20,6 +20,19 @@
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
 
+  <script>
+    
+    var today = new Date();
+      today.setDate(today.getDate() - 1);
+
+      today = today.toISOString().slice(0, 10);
+      var tomorrow = new Date().toISOString().slice(0, 10);
+
+    sessionStorage['today'] = today;
+    sessionStorage['tomorrow'] = tomorrow;
+     
+  </script>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script type="text/javascript">
     // Set a global variable for map
@@ -39,18 +52,36 @@
 
       // Create markers into DOM
       var json = null;
+      
+      /*
       $.ajax({
         'async': false,
         'global': false,
         //롱디 레티 들고오는 링크
-        'url': "/getGPsS",
+        'url': "/getGPS",
         'dataType': "json",
         'success': function (data) {
+          console.log(data);
           createMarkers(data);
         }
+      });
+      */      
+
+      $.ajax({
+        method: "POST",
+        url: "/location",
+        data: {
+            usn : usn,
+            date : today,
+            tomorrow : tomorrow          
+        }
+      }).done(function( msg ) {
+          createMarkers(msg);
+          console.log(msg);
+      }).fail((msg) => {
+          console.log(msg);
       });      
     };
-
     // Instantiate markers in the background and pass it back to the json object
     function createMarkers(markerJson) {
       var length = Object.keys(markerJson).length;
@@ -61,7 +92,8 @@
 
       for (let i = 0; i < length; i++) {
         var sensormark = markerJson[i];
-        sensormark = JSON.parse(`{${sensormark}}`);
+        //sensormark = JSON.parse(`{${sensormark}}`);
+        //sensormark = JSON.parse(sensormark);
 
         
         contentString[i] = 
@@ -131,8 +163,8 @@
           fillColor: '#FF0000',
           fillOpacity: 0.35,
           map: map,
-          position: { lat: sensormark.location[0], lng: sensormark.location[1] },
-          center: { lat: sensormark.location[0], lng: sensormark.location[1] },
+          position: { lat: sensormark['latitude'], lng: sensormark['longitude'] },
+          center: { lat: sensormark['latitude'], lng: sensormark['longitude'] },
           radius: 100
           //html: "<span class='pogo_name'>" + sensormark.name + "</a></span><br />" + sensormark.location[0] + "<br />"
         });
@@ -140,7 +172,7 @@
 
       
         marker[i].addListener('click', function () {
-          //나머지 색상 원래대로 - 이전 창 자동으로 닫는거 안됨...
+          //나머지 색상 원래대로 - 이전 창 자동으로 닫는거 안
           for(var k = 0; k< length; k++){              
               marker[k].setOptions({
               strokeColor: '#FF0000',
@@ -314,6 +346,9 @@
             AQI Map
           </div>
           <div class="card-body">
+            <div>
+              <input type="date">
+            </div>
             <div id="map_canvas" style="position: relative;overflow: hidden;height: 500px;"></div>
             <script async defer
               src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZ_5s3S4uTqhtcBNUndDLKvmvcD23QKvY&language=en&callback=initMap">

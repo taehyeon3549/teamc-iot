@@ -156,7 +156,7 @@ $app->get('/getGPS', 'App\Controller\SensorManagementController:getGPS')
 ->setName('getGPS');
 
 //Get value
-$app->get('/location', 'App\Controller\SensorManagementController:location')
+$app->post('/location', 'App\Controller\SensorManagementController:location')
 ->setName('location');
 
 

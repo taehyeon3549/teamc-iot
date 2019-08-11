@@ -110,8 +110,8 @@ final class SensorManagementController extends BaseController
 	public function sensorList(Request $request, Response $response, $args)
 	{
 		$sensor = [];
-		$sensor['usn'] = $request->getParsedBody()['usn'];
-		$sensor_val = $this->SensorManagementModel->getSensorByusn($sensor);
+		$usn = $request->getParsedBody()['usn'];
+		$sensor_val = $this->SensorManagementModel->getSensorByusn($usn);
 		
 		//결과 넣은 값
 		$num = count($sensor_val);
@@ -337,7 +337,7 @@ final class SensorManagementController extends BaseController
 	public function location(Request $request, Response $response, $args)
 	{
 		//usn 을 이용해서 센서의 갯수 와 정보를 가지고 오고 를 가지고 오고
-		$usn['usn'] = $request->getParsedBody()['usn'];		//입력
+		$usn = $request->getParsedBody()['usn'];		//입력
 		$val['date'] =$request->getParsedBody()['date'];	//입력
 		$val['tomorrow'] = $request->getParsedBody()['tomorrow'];	//입력	
 
@@ -358,6 +358,7 @@ final class SensorManagementController extends BaseController
 				//print_r($val);		//입력값 정상
 				$value = $this->SensorManagementModel->getAQI($val)[0];
 
+				
 				if($value != null){
 					$r_ssn = $value['a_ssn'];
 					$AQ_PM2_5 = $value['AQ_PM2_5'];
@@ -374,6 +375,9 @@ final class SensorManagementController extends BaseController
 					$result[$i]['AQ_O3'] = $AQ_O3;
 					$result[$i]['AQ_NO2'] = $AQ_NO2;
 					$result[$i]['AQ_SO2'] = $AQ_SO2;
+
+					//print_r($result[0]['latitude']);
+
 				}else{
 					$result['message'] = "fail";
 					$result['result'] = "1";
@@ -384,6 +388,7 @@ final class SensorManagementController extends BaseController
 		return $response->withStatus(200)
 		->withHeader('Content-Type', 'application/json')
 		->write(json_encode($result, JSON_NUMERIC_CHECK));
+		// return $request->getParsedBody()['usn'];
 	}
 
 	//getAQI
